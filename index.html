@@ -1,0 +1,637 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AWS CloudShell Command Explorer</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;700&display=swap" rel="stylesheet">
+    <style>
+        body { font-family: 'Inter', sans-serif; }
+        .font-mono { font-family: 'JetBrains Mono', monospace; }
+        .chart-container { 
+            position: relative; 
+            width: 100%; 
+            max-width: 400px; 
+            margin-left: auto; 
+            margin-right: auto; 
+            height: 35vh; 
+            max-height: 350px; 
+        }
+        .hide-scrollbar::-webkit-scrollbar { display: none; }
+        .hide-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
+        .expand-content { max-height: 0; overflow: hidden; transition: max-height 0.4s ease-in-out, opacity 0.3s ease-in-out; opacity: 0; }
+        .expand-content.open { max-height: 1200px; opacity: 1; }
+        .rotate-arrow { transition: transform 0.3s ease; }
+        .rotate-arrow.open { transform: rotate(180deg); }
+    </style>
+</head>
+<body class="bg-stone-50 text-stone-800 antialiased min-h-screen">
+
+    <!-- Chosen Palette: Warm Neutrals with Amber Accents (stone-50 background, white cards, stone-800 text, amber-600 interactive elements) -->
+    <!-- Application Structure Plan: A split dashboard layout. The left pane provides strategic context and a dynamic high-level visual summary (chart) of the covered AWS services, establishing the scope of the document. The right pane features a searchable, filterable interactive grid of command cards. Expanding a command reveals deeper, contextual documentation. This structure optimizes usability by allowing engineers to quickly grasp the tool's overarching capabilities while offering a frictionless, non-linear path to drill down into specific syntax based on immediate operational needs. -->
+    <!-- Visualization & Content Choices: 1. Donut Chart (Chart.js) -> Goal: Inform/Overview -> Justification: Quickly visualizes the distribution of commands across AWS services, helping users understand the reference guide's focus areas at a glance. 2. Filterable Accordion Cards -> Goal: Explore/Organize -> Justification: Prevents cognitive overload associated with dense terminal syntax by allowing users to scan high-level actions and expand only the specific commands they are troubleshooting or learning. NO SVG/Mermaid used. -->
+    <!-- CONFIRMATION: NO SVG graphics used. NO Mermaid JS used. -->
+
+    <nav class="bg-white border-b border-stone-200 sticky top-0 z-50">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex justify-between h-16 items-center">
+                <div class="flex items-center gap-2">
+                    <div class="w-8 h-8 bg-amber-500 rounded flex items-center justify-center text-white font-bold text-xl">
+                        _
+                    </div>
+                    <span class="font-bold text-xl tracking-tight text-stone-900">CloudShell<span class="text-amber-600">Explorer</span></span>
+                </div>
+                <div class="text-sm font-medium text-stone-500 bg-stone-100 px-3 py-1 rounded-full">
+                    Interactive Reference Guide v2
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <main class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+        
+        <div class="mb-10 max-w-3xl">
+            <h1 class="text-3xl font-bold text-stone-900 mb-4">Mastering the AWS Command Line</h1>
+            <p class="text-lg text-stone-600 leading-relaxed">
+                Welcome to the expanded interactive companion for the AWS CloudShell Command Reference. This application has been enriched with an extensive selection of critical commands across modern AWS cloud architectures—spanning Compute, Storage, Security, Orchestration, Database, Serverless, and container environments. Use the unified search and difficulty filters to explore real-world production snippets.
+            </p>
+        </div>
+
+        <div class="grid grid-cols-1 lg:grid-cols-12 gap-8">
+            
+            <div class="lg:col-span-4 space-y-6">
+                <div class="bg-white rounded-2xl shadow-sm border border-stone-200 p-6">
+                    <h2 class="text-lg font-bold text-stone-900 border-b border-stone-100 pb-3 mb-4">Service Distribution</h2>
+                    <p class="text-sm text-stone-500 mb-6">
+                        An live overview of the AWS service boundaries represented in this guide. The dynamic chart updates automatically based on your active filters and search queries.
+                    </p>
+                    <div class="chart-container">
+                        <canvas id="serviceChart"></canvas>
+                    </div>
+                </div>
+
+                <div class="bg-amber-50 rounded-2xl border border-amber-200 p-6">
+                    <h2 class="text-md font-bold text-amber-900 mb-2">Did You Know?</h2>
+                    <p class="text-sm text-amber-800 leading-relaxed">
+                        AWS CloudShell environments automatically preserve up to 1 GB of data in your home directory (<code>$HOME</code>) across multiple sessions within the same AWS Region. This includes your custom utility tools, configurations, and active terminal shell history.
+                    </p>
+                </div>
+            </div>
+
+            <div class="lg:col-span-8 flex flex-col space-y-6">
+                
+                <div class="bg-white rounded-2xl shadow-sm border border-stone-200 p-4 md:p-6 sticky top-20 z-40">
+                    <h2 class="text-lg font-bold text-stone-900 mb-4">Explore Commands</h2>
+                    <p class="text-sm text-stone-500 mb-4">
+                        Filter the command repository by difficulty level or search for specific tools, services, or keywords to instantly find the operational snippet you require.
+                    </p>
+                    
+                    <div class="flex flex-col md:flex-row gap-4 justify-between items-center">
+                        <div class="flex bg-stone-100 p-1 rounded-lg w-full md:w-auto overflow-x-auto hide-scrollbar" id="filter-container">
+                            <button class="filter-btn active px-4 py-2 text-sm font-medium rounded-md transition-colors bg-white shadow-sm text-stone-900" data-filter="All">All</button>
+                            <button class="filter-btn px-4 py-2 text-sm font-medium rounded-md transition-colors text-stone-500 hover:text-stone-900 hover:bg-stone-200" data-filter="Beginner">Beginner</button>
+                            <button class="filter-btn px-4 py-2 text-sm font-medium rounded-md transition-colors text-stone-500 hover:text-stone-900 hover:bg-stone-200" data-filter="Intermediate">Intermediate</button>
+                            <button class="filter-btn px-4 py-2 text-sm font-medium rounded-md transition-colors text-stone-500 hover:text-stone-900 hover:bg-stone-200" data-filter="Advanced">Advanced</button>
+                        </div>
+                        
+                        <div class="relative w-full md:w-64">
+                            <input type="text" id="searchInput" placeholder="Search commands..." class="w-full pl-10 pr-4 py-2 border border-stone-200 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-amber-500 focus:border-amber-500 transition-all bg-stone-50 focus:bg-white">
+                            <div class="absolute left-3 top-2.5 text-stone-400">
+                                &#128269;
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div id="commandsGrid" class="flex flex-col gap-4 pb-12">
+                </div>
+
+            </div>
+        </div>
+    </main>
+
+    <script>
+        const commandsData = [
+            {
+                category: "Beginner",
+                command: "aws sts get-caller-identity",
+                service: "IAM",
+                action: "Verify Identity",
+                purpose: "Retrieves details about the IAM identity (User, Role, or Federated Profile) currently active in your CloudShell session.",
+                meaning: "<b>aws</b>: Invokes the AWS CLI.<br><b>sts</b>: Points to the Security Token Service.<br><b>get-caller-identity</b>: The specific action requesting current session credentials metadata.",
+                usage: "Frequently used as the 'hello world' of the AWS CLI or when you first open CloudShell to verify which account ID, user ARN, and role session you are operating under before running destructive commands.",
+                reason: "<b>Security and Context Validation.</b> In environments where cross-account access or multiple role assumptions are common, this command guarantees you do not execute commands in the wrong AWS environment or with unintended privilege scopes."
+            },
+            {
+                category: "Beginner",
+                command: "aws s3 ls",
+                service: "S3",
+                action: "List Buckets",
+                purpose: "Lists all Amazon Simple Storage Service (S3) buckets associated with the active AWS account, or lists the contents of a specific bucket.",
+                meaning: "<b>aws</b>: Invokes the AWS CLI.<br><b>s3</b>: Interacts with the Amazon S3 service.<br><b>ls</b>: The directory listing command (analogous to the Unix ls).",
+                usage: "Used to quickly browse storage structures. Running 'aws s3 ls' lists all buckets, while running 'aws s3 ls s3://my-bucket-name/' lists files and subdirectories inside that specific bucket.",
+                reason: "<b>Frictionless Data Verification.</b> CloudShell has a built-in ephemeral storage space, and engineers frequently need to pull down configs, code artifacts, or logs from S3. Checking bucket names and file hierarchies directly from the terminal saves trips to the visual AWS Console."
+            },
+            {
+                category: "Beginner",
+                command: "aws ec2 describe-instances",
+                service: "EC2",
+                action: "List Virtual Machines",
+                purpose: "Lists and provides architectural/metadata details about your Amazon Elastic Compute Cloud (EC2) instances.",
+                meaning: "<b>aws</b>: Invokes the AWS CLI.<br><b>ec2</b>: Interacts with the Amazon EC2 service.<br><b>describe-instances</b>: Retrieves configuration information (IDs, status, IP addresses, instance types) for instances within the current region.",
+                usage: "Used by administrators to check if virtual machines are running, stopped, or pending, and to fetch public or private IP addresses for remote connections.",
+                reason: "<b>Resource Monitoring and Inventory.</b> Allows rapid status checks on compute nodes without navigating the multi-step EC2 web console, especially when checking on instances after an automation script or scaling event has run."
+            },
+            {
+                category: "Beginner",
+                command: "aws configure list",
+                service: "CLI Configuration",
+                action: "Verify Environment",
+                purpose: "Displays the current active configuration values (Access Keys, Region, Output) along with their source.",
+                meaning: "<b>aws</b>: Invokes the AWS CLI.<br><b>configure</b>: Interacts with the AWS CLI's configurations.<br><b>list</b>: Commands the CLI to read out active configurations in a clean tabular format.",
+                usage: "Run this when a command fails with regional errors or permission errors to confirm whether CloudShell has mapped you to your desired AWS Region.",
+                reason: "<b>Debugging and Environment Clarity.</b> Because CloudShell auto-injects temporary security credentials and sets default regions based on where you launched it, running this command ensures your CLI configurations match your intended operational parameters."
+            },
+            {
+                category: "Beginner",
+                command: "aws lambda list-functions",
+                service: "Lambda",
+                action: "List Functions",
+                purpose: "Lists all AWS Lambda functions deployed in your current active region.",
+                meaning: "<b>aws lambda</b>: Targets the Lambda serverless Compute environment.<br><b>list-functions</b>: Requests high-level configurations of all serverless functions in the current region context.",
+                usage: "Used when verifying deployment status or finding names of active microservices before attempting triggers or parameter checks.",
+                reason: "<b>Development Inventory.</b> Provides a quick regional snapshot of all functional code resources, allowing engineers to audit runtime environments, memory configurations, or deployment package formats."
+            },
+            {
+                category: "Beginner",
+                command: "aws rds describe-db-instances",
+                service: "RDS",
+                action: "List Databases",
+                purpose: "Lists and details status information for all running Amazon RDS database instances.",
+                meaning: "<b>aws rds</b>: Targets the Relational Database Service.<br><b>describe-db-instances</b>: Requests physical state, sizing, network end points, and engine versions of all provisioned database systems.",
+                usage: "Crucial for capturing the database endpoints and security groups necessary for application connection setups.",
+                reason: "<b>Architectural Verification.</b> Allows developers to confirm that the database is actively in an 'available' state and fetch connection details securely without loading the full RDS Console layout."
+            },
+            {
+                category: "Beginner",
+                command: "aws dynamodb list-tables",
+                service: "DynamoDB",
+                action: "List NoSQL Tables",
+                purpose: "Returns an array of all active Amazon DynamoDB table names inside the current region.",
+                meaning: "<b>aws dynamodb</b>: Targets the DynamoDB NoSQL service.<br><b>list-tables</b>: Performs a quick scan of existing table namespaces.",
+                usage: "Used when starting administrative scripts to identify database storage structures.",
+                reason: "<b>Lightweight Auditing.</b> Returns a super-fast, minimal payload, saving read throughput and helping you verify table existences programmatically."
+            },
+            {
+                category: "Beginner",
+                command: "aws sqs list-queues",
+                service: "SQS",
+                action: "List Message Queues",
+                purpose: "Lists all Simple Queue Service (SQS) message queues in your active region.",
+                meaning: "<b>aws sqs</b>: Targets the decoupled messaging queue service.<br><b>list-queues</b>: Returns URLs of all active message queues.",
+                usage: "Used to verify asynchronous microservice message pipes and fetch logical URLs for event triggers.",
+                reason: "<b>Decoupled Architecture Diagnostics.</b> Quickly lists endpoints so administrators can copy queue URLs for message publishing or polling."
+            },
+            {
+                category: "Intermediate",
+                command: "aws s3 sync <source_path> <destination_path>",
+                service: "S3",
+                action: "Synchronize Directories",
+                purpose: "Recursively synchronizes directories, files, or prefixes between a local directory in CloudShell and an S3 bucket (or between two S3 buckets).",
+                meaning: "<b>aws s3</b>: Interacts with S3.<br><b>sync</b>: Performs a delta synchronization.<br><b>&lt;source_path&gt;</b>: The origin file system path.<br><b>&lt;destination_path&gt;</b>: The target path.",
+                usage: "Used to upload locally generated CloudShell files to an S3 bucket for permanent archiving, or conversely, pulling a full static website folder down from S3 to modify it locally inside CloudShell.",
+                reason: "<b>Efficiency and Cost-Effectiveness.</b> Unlike bulk copying which overrides files unconditionally, sync only copies modified or missing assets. This reduces network overhead, speeds up processing time, and reduces S3 API call charges."
+            },
+            {
+                category: "Intermediate",
+                command: "aws ec2 start-instances --instance-ids <id_1> <id_2>",
+                service: "EC2",
+                action: "State Management",
+                purpose: "Powers on one or more stopped Amazon EC2 instances.",
+                meaning: "<b>aws ec2</b>: Interacts with EC2.<br><b>start-instances</b>: Triggers the boot sequence.<br><b>--instance-ids</b>: Flag designating the target EC2 Instance IDs.",
+                usage: "Commonly executed during morning routine tasks to spin up development boxes, jump-hosts, or staging systems that were turned off overnight to control costs.",
+                reason: "<b>Operational Lifecycle Management.</b> It is a fast, programmatic approach to state management. When combined with terminal alias features or scripts in CloudShell, it eliminates the latency of navigating through standard web portals."
+            },
+            {
+                category: "Intermediate",
+                command: "aws ssm get-parameter --name \"/path/to/parameter\" --with-decryption",
+                service: "Systems Manager",
+                action: "Secrets Retrieval",
+                purpose: "Retrieves secure string configuration parameters, database connection details, or API keys stored in the AWS Systems Manager (SSM) Parameter Store.",
+                meaning: "<b>aws ssm</b>: Invokes Systems Manager.<br><b>get-parameter</b>: Requests specific name.<br><b>--name</b>: Specifies hierarchy.<br><b>--with-decryption</b>: Decrypts configurations on-the-fly using AWS KMS.",
+                usage: "Programmatically injecting API tokens, system variables, or private SSH keys into your active CloudShell terminal session so that they can be utilized by deployment scripts without hardcoding secrets.",
+                reason: "<b>Zero-Hardcoding Compliance.</b> Storing secrets directly in scripts presents a severe risk of exposure. Using Systems Manager ensures that operational scripts remain clean, parameterized, and compliant with security frameworks."
+            },
+            {
+                category: "Intermediate",
+                command: "aws iam list-users",
+                service: "IAM",
+                action: "User Auditing",
+                purpose: "Generates a comprehensive list of all Identity and Access Management (IAM) users configured inside the current AWS Account.",
+                meaning: "<b>aws iam</b>: Targets IAM service.<br><b>list-users</b>: Requests a list of users, returns output in JSON, including User ID, ARN, Creation Date, and Path.",
+                usage: "Routinely utilized during user audits, permission reviews, or compliance verification tasks to inspect which administrative or developer accounts currently exist.",
+                reason: "<b>Security Auditability.</b> Quickly auditing access controls is critical. Running this command inside CloudShell bypasses administrative lag and presents quick, parseable structural data of your human resource catalog."
+            },
+            {
+                category: "Intermediate",
+                command: "aws secretsmanager get-secret-value --secret-id <secret-id>",
+                service: "Secrets Manager",
+                action: "Access Credentials",
+                purpose: "Retrieves decrypted secret details (such as database credentials or API keys) securely stored in AWS Secrets Manager.",
+                meaning: "<b>aws secretsmanager</b>: Invokes Secrets Manager for high-security, rotating secrets management.<br><b>get-secret-value</b>: Retrieves value details for a given identifier.<br><b>--secret-id</b>: Identifies target secret.",
+                usage: "Utilized during custom script executions when calling third-party services requiring real-time, decrypted programmatic access keys.",
+                reason: "<b>Enterprise Security Standards.</b> Implements credential rotation automatically. Pulling credentials dynamically ensures that static copies are never stored on persistent storage blocks."
+            },
+            {
+                category: "Intermediate",
+                command: "aws lambda invoke --function-name <name> response.json",
+                service: "Lambda",
+                action: "Execute Serverless Code",
+                purpose: "Invokes an active AWS Lambda function synchronously and writes the runtime execution payload response to a local JSON file.",
+                meaning: "<b>aws lambda invoke</b>: Triggers code run in isolation.<br><b>--function-name</b>: Designates the targeted function.<br><b>response.json</b>: Local file path where return status is saved.",
+                usage: "Commonly used when testing Lambda logic, REST routes, or event triggers from the command-line workspace.",
+                reason: "<b>Programmatic Diagnostic and Fast Feedback Loops.</b> Lets developers bypass console trigger interfaces, sending mock JSON inputs directly to function stacks and storing outputs locally for log inspection."
+            },
+            {
+                category: "Intermediate",
+                command: "aws logs tail /aws/lambda/<name> --follow",
+                service: "CloudWatch",
+                action: "Tail Live Log Streams",
+                purpose: "Tails CloudWatch log streams for a specific system or function, logging active messages directly into your CloudShell window.",
+                meaning: "<b>aws logs tail</b>: Commands CLI to poll log groups.<br><b>--follow</b>: Keeps stream open and pipes incoming logging parameters down continuously (similar to standard tail -f).",
+                usage: "Used when executing dynamic integrations, watching execution run outputs, or chasing errors live.",
+                reason: "<b>Real-time Stream Diagnostics.</b> Eliminates navigation through complex historical Log Streams, providing a centralized unified viewport for system outputs."
+            },
+            {
+                category: "Intermediate",
+                command: "aws dynamodb get-item --table-name <name> --key '{\"id\": {\"S\": \"value\"}}'",
+                service: "DynamoDB",
+                action: "Retrieve Single NoSQL Record",
+                purpose: "Fetches properties and metadata for a single item out of a target DynamoDB table.",
+                meaning: "<b>get-item</b>: NoSQL specific fetch action.<br><b>--table-name</b>: The target table context.<br><b>--key</b>: Exact partition (and optional sort) key specified in standard DynamoDB JSON format.",
+                usage: "Used by back-end developers to check current attribute configurations, debug entry errors, or verify database writing systems.",
+                reason: "<b>Direct Record Access.</b> Fetches exact targets with extremely low system utilization compared to highly expensive, general scan commands."
+            },
+            {
+                category: "Intermediate",
+                command: "aws sqs send-message --queue-url <url> --message-body \"Hello\"",
+                service: "SQS",
+                action: "Publish Message",
+                purpose: "Publishes a text payload message directly to a specified Amazon SQS queue.",
+                meaning: "<b>aws sqs send-message</b>: Pushes payload down the message stream.<br><b>--queue-url</b>: Destination queue address endpoint.<br><b>--message-body</b>: The exact text string or JSON object payload to store.",
+                usage: "Commonly utilized during integrations to trigger backend workers or run performance tests.",
+                reason: "<b>Asynchronous Verification.</b> Allows administrators to easily fake system events and test pipeline operations programmatically from the CLI."
+            },
+            {
+                category: "Intermediate",
+                command: "aws ecr get-login-password --region <region> | docker login --username AWS --password-stdin <url>",
+                service: "ECR",
+                action: "Authenticate Docker Container Engine",
+                purpose: "Authenticates your local Docker installation with your private Amazon Elastic Container Registry (ECR).",
+                meaning: "<b>aws ecr get-login-password</b>: Generates temporary authorization token.<br><b>docker login</b>: Pipes password output down directly to log in securely into the private registry domain.",
+                usage: "Critical first step before building, tagging, and pushing custom container images to AWS from CloudShell.",
+                reason: "<b>Frictionless Container Pipelines.</b> Combines credential acquisition and container daemon login into a single secure pipeline operation."
+            },
+            {
+                category: "Advanced",
+                command: "aws ec2 describe-instances --query \"...\" --output table",
+                service: "EC2",
+                action: "Custom Filtering",
+                purpose: "Queries specific attributes of all EC2 instances and organizes the filtered results into a clean, human-readable terminal table.",
+                meaning: "<b>--query</b>: Uses JMESPath query language to filter JSON output.<br><b>Reservations[*].Instances[*]...</b>: Selects and renames fields.<br><b>--output table</b>: Formats as ASCII table instead of JSON.",
+                usage: "Essential for generating instantaneous status sheets of compute environments to present to managers or for rapid terminal troubleshooting.",
+                reason: "<b>Data Reduction and Readability.</b> Running describe commands natively returns hundreds of lines of complex JSON. Applying server-side projection via --query filters out noise, keeping your CloudShell terminal tidy."
+            },
+            {
+                category: "Advanced",
+                command: "aws s3api put-bucket-policy --bucket <name> --policy file://policy.json",
+                service: "S3",
+                action: "Security Rules",
+                purpose: "Programmatically applies a complex JSON policy document directly to an S3 bucket to configure access controls, public blocks, or cross-account operations.",
+                meaning: "<b>aws s3api</b>: Low-level API commands.<br><b>put-bucket-policy</b>: Replaces/creates policy.<br><b>--policy file://...</b>: Reads policy from local CloudShell file storage.",
+                usage: "Typically used by Cloud Architects to quickly restrict access on a bucket, block non-SSL/HTTPS connections, or permit secure cross-account asset sharing.",
+                reason: "<b>Repeatability and Infrastructure Security.</b> Writing JSON policies inline on the command line is error-prone. Storing the policy in a local file within CloudShell and executing this command is the industry standard."
+            },
+            {
+                category: "Advanced",
+                command: "aws cloudformation deploy --template-file template.yaml ...",
+                service: "CloudFormation",
+                action: "Infrastructure as Code",
+                purpose: "Deploys, updates, or modifies entire cloud architectures using an Infrastructure as Code (IaC) templates defined in CloudFormation.",
+                meaning: "<b>aws cloudformation deploy</b>: Handles creation/execution of change sets natively.<br><b>--template-file</b>: Path to blueprint.<br><b>--parameter-overrides</b>: Feeds runtime parameters.",
+                usage: "Used to launch, update, or teardown environments deterministically from the command line.",
+                reason: "<b>Automated Provisioning and State Management.</b> Instead of manual configuration, CloudShell acts as your lightweight Deployment Server. Ensures consistency and prevents human-error configuration drift."
+            },
+            {
+                category: "Advanced",
+                command: "pip install <package> --user",
+                service: "CLI Configuration",
+                action: "Package Install",
+                purpose: "Extends the capabilities of your CloudShell environment by downloading and installing specialized Python development packages directly onto CloudShell's persistent storage.",
+                meaning: "<b>pip install</b>: Downloads packages.<br><b>--user</b>: Installs in the local user directory (~/.local), crucial because CloudShell limits sudo permissions.",
+                usage: "Run this when you need specialized libraries (such as ansible, boto3) to execute automation code from within your terminal.",
+                reason: "<b>Extensibility.</b> AWS CloudShell persists up to 1 GB of files inside your home directory across sessions, so these installations remain available when you log back in."
+            },
+            {
+                category: "Advanced",
+                command: "aws iam simulate-principal-policy --policy-source-arn <arn> --action-names <actions>",
+                service: "IAM",
+                action: "Simulate Permissions Matrix",
+                purpose: "Simulates and tests if a specific IAM principal has rights to run specific AWS commands without actually executing them.",
+                meaning: "<b>simulate-principal-policy</b>: Performs programmatic dry-runs of permissions evaluations.<br><b>--policy-source-arn</b>: The user or role context ARN.<br><b>--action-names</b>: Array of target actions to dry-run.",
+                usage: "Crucial for troubleshooting IAM 'Access Denied' errors in security pipelines.",
+                reason: "<b>Safe Security Auditing.</b> Validates custom-crafted JSON permissions schemas against live roles without risking accidental resource generation or state corruption."
+            },
+            {
+                category: "Advanced",
+                command: "aws sts assume-role --role-arn <arn> --role-session-name <name>",
+                service: "IAM",
+                action: "Assume Multi-Account IAM Roles",
+                purpose: "Requests temporary security credentials for a role, allowing temporary cross-account or elevated action executions.",
+                meaning: "<b>assume-role</b>: STS operation that returns Access Key, Secret Key, and Session Token.<br><b>--role-arn</b>: High privilege ARN target context.",
+                usage: "Used to operate securely inside production workloads from a central development context.",
+                reason: "<b>Least Privilege Best Practice.</b> Eliminates the need to hold administrative credentials natively, leveraging temporary, rotating credential parameters for isolated administrative procedures."
+            },
+            {
+                category: "Advanced",
+                command: "aws cognito-idp admin-initiate-auth --user-pool-id <id> --client-id <id> --auth-flow ADMIN_NO_SRP_AUTH --auth-parameters USERNAME=<user>,PASSWORD=<pass>",
+                service: "Cognito",
+                action: "Test Authentication Workflows",
+                purpose: "Simulates authentication requests directly inside a Cognito User Pool, bypassing user-interface dependencies.",
+                meaning: "<b>cognito-idp</b>: Interacts with the Identity Provider service engine.<br><b>admin-initiate-auth</b>: Overpasses standard SRP password structures directly for administrative troubleshooting tests.",
+                usage: "Essential for debugging authentication structures, MFA policies, or custom Lambda trigger chains.",
+                reason: "<b>Bypass UI Blockers.</b> Allows engineers to accurately measure authentication latencies and test pool configurations directly inside CloudShell."
+            },
+            {
+                category: "Advanced",
+                command: "aws stepfunctions start-execution --state-machine-arn <arn> --input '{\"key\": \"val\"}'",
+                service: "Step Functions",
+                action: "Trigger Orchestration States",
+                purpose: "Launches a new programmatic execution execution run within an AWS Step Functions State Machine engine.",
+                meaning: "<b>start-execution</b>: Triggers orchestrated workflows.<br><b>--state-machine-arn</b>: Target ARN machine logic map context.<br><b>--input</b>: Initial JSON parameter payload.",
+                usage: "Employed during deployment stages to initiate batch computing, machine learning pathways, or environment validations.",
+                reason: "<b>Seamless Automation Triggers.</b> Triggers microservices pipelines directly from the terminal, avoiding visual UI consoles entirely."
+            },
+            {
+                category: "Advanced",
+                command: "aws eks update-kubeconfig --region <region> --name <cluster-name>",
+                service: "EKS",
+                action: "Configure Kubernetes Contexts",
+                purpose: "Automatically configures kubectl parameters locally inside CloudShell to connect to a target Amazon EKS Kubernetes Cluster.",
+                meaning: "<b>update-kubeconfig</b>: Downloads and merges configuration files into local config maps.<br><b>--name</b>: Targets EKS cluster context.",
+                usage: "Executed when managing Kubernetes deployments, checking pod health, or applying helm blueprints from CloudShell.",
+                reason: "<b>Frictionless Hybrid Clusters.</b> Turns AWS CloudShell into a robust EKS control node with security parameters automatically authorized via active IAM policies."
+            },
+            {
+                category: "Advanced",
+                command: "aws rds create-db-snapshot --db-instance-identifier <id> --db-snapshot-identifier <snapshot-name>",
+                service: "RDS",
+                action: "Provision Hot Databases Backup Snapshots",
+                purpose: "Forces an immediate, secure storage-level snapshot backup of an active database system.",
+                meaning: "<b>create-db-snapshot</b>: Initiates live hot-backup operations.<br><b>--db-instance-identifier</b>: Selected target instance database stack.",
+                usage: "Executed right before critical schema alterations, code migrations, or emergency maintenance procedures to guarantee a safe recovery fallback.",
+                reason: "<b>Zero Data Loss Best Practices.</b> Guarantees rapid, restorable database environments without disturbing structural application integrity."
+            }
+        ];
+
+        let currentFilter = 'All';
+        let searchQuery = '';
+        let myChart = null;
+
+        function getCategoryColor(category) {
+            if (category === 'Beginner') return 'bg-emerald-100 text-emerald-800 border-emerald-200';
+            if (category === 'Intermediate') return 'bg-blue-100 text-blue-800 border-blue-200';
+            return 'bg-violet-100 text-violet-800 border-violet-200';
+        }
+
+        function initChart() {
+            const ctx = document.getElementById('serviceChart').getContext('2d');
+            
+            const serviceCounts = {};
+            commandsData.forEach(cmd => {
+                let s = cmd.service;
+                if (s === 'CLI Configuration') s = 'General/CLI';
+                if (s === 'Environment Customization') s = 'General/CLI';
+                serviceCounts[s] = (serviceCounts[s] || 0) + 1;
+            });
+
+            const labels = Object.keys(serviceCounts);
+            const data = Object.values(serviceCounts);
+
+            const colors = [
+                '#f59e0b', 
+                '#0ea5e9', 
+                '#10b981', 
+                '#8b5cf6', 
+                '#f43f5e', 
+                '#64748b',
+                '#14b8a6',
+                '#a855f7',
+                '#ec4899',
+                '#ef4444'
+            ];
+
+            myChart = new Chart(ctx, {
+                type: 'doughnut',
+                data: {
+                    labels: labels,
+                    datasets: [{
+                        data: data,
+                        backgroundColor: colors.slice(0, labels.length),
+                        borderWidth: 2,
+                        borderColor: '#ffffff',
+                        hoverOffset: 4
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: {
+                        legend: {
+                            position: 'right',
+                            labels: {
+                                font: { family: "'Inter', sans-serif", size: 10 },
+                                color: '#57534e',
+                                padding: 8
+                            }
+                        },
+                        tooltip: {
+                            backgroundColor: 'rgba(28, 25, 23, 0.9)',
+                            titleFont: { family: "'Inter', sans-serif", size: 12 },
+                            bodyFont: { family: "'Inter', sans-serif", size: 12 },
+                            padding: 10,
+                            cornerRadius: 6,
+                            displayColors: true,
+                            callbacks: {
+                                label: function(context) {
+                                    return ' ' + context.label + ': ' + context.raw + ' commands';
+                                }
+                            }
+                        }
+                    },
+                    cutout: '65%'
+                }
+            });
+        }
+
+        function updateChartData(filteredCommands) {
+            if (!myChart) return;
+            
+            const serviceCounts = {};
+            filteredCommands.forEach(cmd => {
+                let s = cmd.service;
+                if (s === 'CLI Configuration') s = 'General/CLI';
+                if (s === 'Environment Customization') s = 'General/CLI';
+                serviceCounts[s] = (serviceCounts[s] || 0) + 1;
+            });
+
+            myChart.data.labels = Object.keys(serviceCounts);
+            myChart.data.datasets[0].data = Object.values(serviceCounts);
+            myChart.update();
+        }
+
+        function toggleCard(id) {
+            const content = document.getElementById(`content-${id}`);
+            const arrow = document.getElementById(`arrow-${id}`);
+            const card = document.getElementById(`card-${id}`);
+            
+            if (content.classList.contains('open')) {
+                content.classList.remove('open');
+                arrow.classList.remove('open');
+                card.classList.remove('border-amber-300', 'shadow-md');
+                card.classList.add('border-stone-200');
+            } else {
+                document.querySelectorAll('.expand-content.open').forEach(el => el.classList.remove('open'));
+                document.querySelectorAll('.rotate-arrow.open').forEach(el => el.classList.remove('open'));
+                document.querySelectorAll('[id^="card-"]').forEach(el => {
+                    el.classList.remove('border-amber-300', 'shadow-md');
+                    el.classList.add('border-stone-200');
+                });
+
+                content.classList.add('open');
+                arrow.classList.add('open');
+                card.classList.remove('border-stone-200');
+                card.classList.add('border-amber-300', 'shadow-md');
+                
+                setTimeout(() => {
+                    card.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+                }, 100);
+            }
+        }
+
+        function renderCommands() {
+            const grid = document.getElementById('commandsGrid');
+            grid.innerHTML = '';
+
+            const filteredData = commandsData.filter(cmd => {
+                const matchCategory = currentFilter === 'All' || cmd.category === currentFilter;
+                const searchLower = searchQuery.toLowerCase();
+                const matchSearch = cmd.command.toLowerCase().includes(searchLower) || 
+                                    cmd.service.toLowerCase().includes(searchLower) ||
+                                    cmd.purpose.toLowerCase().includes(searchLower) ||
+                                    cmd.action.toLowerCase().includes(searchLower);
+                return matchCategory && matchSearch;
+            });
+
+            updateChartData(filteredData);
+
+            if (filteredData.length === 0) {
+                grid.innerHTML = `
+                    <div class="bg-white border border-stone-200 border-dashed rounded-xl p-10 text-center">
+                        <div class="text-3xl mb-2">&#128269;</div>
+                        <h3 class="text-lg font-bold text-stone-900">No commands found</h3>
+                        <p class="text-stone-500">Try adjusting your search terms or filters.</p>
+                    </div>
+                `;
+                return;
+            }
+
+            filteredData.forEach((cmd, index) => {
+                const colorClass = getCategoryColor(cmd.category);
+                
+                const card = document.createElement('div');
+                card.id = `card-${index}`;
+                card.className = "bg-white rounded-xl shadow-sm border border-stone-200 transition-all duration-300 overflow-hidden group";
+                
+                card.innerHTML = `
+                    <div class="p-5 cursor-pointer flex flex-col md:flex-row md:items-center justify-between gap-4" onclick="toggleCard(${index})">
+                        <div class="flex-1">
+                            <div class="flex items-center gap-3 mb-2">
+                                <span class="text-xs font-semibold px-2.5 py-0.5 rounded border ${colorClass}">${cmd.category}</span>
+                                <span class="text-xs font-medium text-stone-500 uppercase tracking-wider">${cmd.service} &bull; ${cmd.action}</span>
+                            </div>
+                            <h3 class="font-mono text-sm md:text-base text-stone-900 font-bold group-hover:text-amber-600 transition-colors break-all md:break-normal">${cmd.command}</h3>
+                        </div>
+                        <div class="flex items-center text-stone-400 group-hover:text-amber-500 shrink-0">
+                            <span class="text-sm mr-2 font-medium hidden md:block">Details</span>
+                            <div id="arrow-${index}" class="rotate-arrow text-xl leading-none">&#9662;</div>
+                        </div>
+                    </div>
+                    
+                    <div id="content-${index}" class="expand-content bg-stone-50 border-t border-stone-100">
+                        <div class="p-5 md:p-6 space-y-6">
+                            
+                            <div>
+                                <h4 class="text-xs font-bold text-stone-400 uppercase tracking-wider mb-2">Purpose</h4>
+                                <p class="text-stone-700 text-sm leading-relaxed">${cmd.purpose}</p>
+                            </div>
+
+                            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                                <div>
+                                    <h4 class="text-xs font-bold text-stone-400 uppercase tracking-wider mb-2">Syntax Meaning</h4>
+                                    <p class="text-stone-700 text-sm leading-relaxed bg-white border border-stone-200 p-3 rounded-lg">${cmd.meaning}</p>
+                                </div>
+                                <div>
+                                    <h4 class="text-xs font-bold text-stone-400 uppercase tracking-wider mb-2">Common Usage</h4>
+                                    <p class="text-stone-700 text-sm leading-relaxed bg-white border border-stone-200 p-3 rounded-lg">${cmd.usage}</p>
+                                </div>
+                            </div>
+
+                            <div class="bg-amber-50 border-l-4 border-amber-500 p-4 rounded-r-lg">
+                                <h4 class="text-xs font-bold text-amber-800 uppercase tracking-wider mb-1">Reason for Use</h4>
+                                <p class="text-amber-900 text-sm leading-relaxed">${cmd.reason}</p>
+                            </div>
+
+                        </div>
+                    </div>
+                `;
+                grid.appendChild(card);
+            });
+        }
+
+        function setupFilters() {
+            const buttons = document.querySelectorAll('.filter-btn');
+            buttons.forEach(btn => {
+                btn.addEventListener('click', (e) => {
+                    buttons.forEach(b => {
+                        b.classList.remove('bg-white', 'shadow-sm', 'text-stone-900');
+                        b.classList.add('text-stone-500');
+                    });
+                    
+                    const clicked = e.target;
+                    clicked.classList.remove('text-stone-500');
+                    clicked.classList.add('bg-white', 'shadow-sm', 'text-stone-900');
+                    
+                    currentFilter = clicked.getAttribute('data-filter');
+                    renderCommands();
+                });
+            });
+
+            const searchInput = document.getElementById('searchInput');
+            searchInput.addEventListener('input', (e) => {
+                searchQuery = e.target.value;
+                renderCommands();
+            });
+        }
+
+        window.onload = () => {
+            initChart();
+            renderCommands();
+            setupFilters();
+        };
+
+    </script>
+</body>
+</html>
