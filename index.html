@@ -138,9 +138,26 @@
         button i {
             font-size: 1rem;
         }
+
+        /* Mobile / Touch-friendly adjustments */
+        button, .filter-btn, .bookmark-btn { -webkit-tap-highlight-color: transparent; }
+        @media (max-width: 640px) {
+            /* Slightly larger tap targets on mobile */
+            button, .filter-btn { padding: 0.75rem 0.9rem !important; }
+            .chart-container { height: 28vh !important; max-height: 220px !important; }
+            .text-stone-900 { font-size: 1rem; }
+        }
+        @media (min-width: 641px) and (max-width: 1024px) {
+            .chart-container { height: 30vh !important; }
+        }
+
+        /* Improve responsive font scaling for headings */
+        .responsive-h1 { font-size: 1.25rem; }
+        @media (min-width: 640px) { .responsive-h1 { font-size: 1.875rem; } }
+        @media (min-width: 1024px) { .responsive-h1 { font-size: 2.25rem; } }
     </style>
 </head>
-<body class="bg-stone-50 text-stone-800 antialiased min-h-screen">
+<body id="top" class="bg-stone-50 text-stone-800 antialiased min-h-screen">
 
     <!-- Chosen Palette: Warm Neutrals with Amber Accents (stone-50 background, white cards, stone-800 text, amber-600 interactive elements) -->
     <!-- Application Structure Plan: A split dashboard layout. The left pane provides strategic context and a dynamic high-level visual summary (chart) of the covered AWS services, establishing the scope of the document. The right pane features a searchable, filterable interactive grid of command cards. Expanding a command reveals deeper, contextual documentation. This structure optimizes usability by allowing engineers to quickly grasp the tool's overarching capabilities while offering a frictionless, non-linear path to drill down into specific syntax based on immediate operational needs. -->
@@ -149,18 +166,22 @@
 
     <nav class="bg-white border-b border-stone-200 sticky top-0 z-50">
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-            <div class="flex justify-between h-16 items-center">
-                <div class="flex items-center gap-2">
+            <div class="flex flex-wrap justify-between items-center sm:h-16 py-2">
+                <a href="#top" onclick="scrollToTop(event)" class="flex items-center gap-2 cursor-pointer" aria-label="Home - CloudShell Explorer">
                     <div class="w-8 h-8 bg-amber-500 rounded flex items-center justify-center text-white font-bold text-xl">
                         _
                     </div>
                     <span class="font-bold text-xl tracking-tight text-stone-900">CloudShell<span class="text-amber-600">Explorer</span></span>
-                </div>
+                </a>
                 <div class="flex items-center gap-4">
-                    <div class="text-sm font-medium text-stone-500 bg-stone-100 px-3 py-1 rounded-full">
+                    <div class="hidden sm:block text-sm font-medium text-stone-500 bg-stone-100 px-3 py-1 rounded-full">
                         Interactive Reference Guide v2
                     </div>
                     <div class="flex gap-2">
+                        <!-- Publisher quick-link -->
+                        <button id="publisherBtn" class="px-3 py-2 text-stone-600 hover:text-amber-600 transition-colors" title="About the Publisher" onclick="scrollToSection('publisher', event)">
+                            <i class="fas fa-user text-lg"></i>
+                        </button>
                         <!-- History Button -->
                         <button id="historyBtn" class="px-3 py-2 text-stone-600 hover:text-amber-600 transition-colors" title="View command history">
                             <i class="fas fa-history text-lg"></i>
@@ -207,8 +228,8 @@
             </div>
         </div>
         
-        <div class="mb-10">
-            <h1 class="text-3xl font-bold text-stone-900 mb-4">Mastering the AWS Command Line</h1>
+            <div class="mb-10">
+            <h1 class="responsive-h1 font-bold text-stone-900 mb-4">Mastering the AWS Command Line</h1>
             <p class="text-lg text-stone-600 leading-relaxed text-justify">
                 Welcome to the expanded interactive companion for the AWS CloudShell Command Reference. This application has been enriched with an extensive selection of critical commands across modern AWS cloud architectures—spanning Compute, Storage, Security, Orchestration, Database, Serverless, and container environments. Use the unified search and difficulty filters to explore real-world production snippets.
             </p>
@@ -365,10 +386,10 @@
 
         <!-- About the Publisher Section -->
         <div class="mt-20 pt-12 border-t border-stone-200">
-            <div class="mb-8">
-                <h2 class="text-4xl font-bold text-stone-900 mb-2">About the Publisher</h2>
-                <p class="text-stone-600 text-lg">Meet the mind behind CloudShell Explorer</p>
-            </div>
+            <div id="publisher" class="mb-8 text-center">
+                <h2 class="text-2xl sm:text-3xl lg:text-4xl font-bold text-stone-900 mb-2">About the Publisher</h2>
+                    <p class="text-stone-600 text-lg">Meet the mind behind CloudShell Explorer</p>
+                </div>
 
             <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
                 <!-- Main Profile Card -->
@@ -1236,6 +1257,22 @@
             } catch (e) {
                 console.warn('Failed to update chart theme', e);
             }
+        }
+
+        // Smooth scroll to top when clicking the site title
+        function scrollToTop(e) {
+            if (e && e.preventDefault) e.preventDefault();
+            try { window.scrollTo({ top: 0, behavior: 'smooth' }); } catch (err) { window.scrollTo(0,0); }
+        }
+
+        // Smooth scroll helper to target section by id
+        function scrollToSection(id, e) {
+            if (e && e.preventDefault) e.preventDefault();
+            const el = document.getElementById(id);
+            if (!el) return;
+            try { el.scrollIntoView({ behavior: 'smooth', block: 'start' }); } catch (err) { el.scrollIntoView(); }
+            // update URL hash without jumping
+            try { history.replaceState(null, '', '#' + id); } catch (err) { /* ignore */ }
         }
 
         // Copy to Clipboard Functions
