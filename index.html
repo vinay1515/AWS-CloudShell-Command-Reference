@@ -7,6 +7,7 @@
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
         body { font-family: 'Inter', sans-serif; }
         .font-mono { font-family: 'JetBrains Mono', monospace; }
@@ -25,6 +26,67 @@
         .expand-content.open { max-height: 1200px; opacity: 1; }
         .rotate-arrow { transition: transform 0.3s ease; }
         .rotate-arrow.open { transform: rotate(180deg); }
+        
+        /* Dark Mode Styles */
+        body.dark-mode { 
+            background-color: #1a1a1a;
+            color: #e5e5e5;
+        }
+        body.dark-mode .bg-white { background-color: #2d2d2d !important; }
+        body.dark-mode .bg-stone-50 { background-color: #1a1a1a !important; }
+        body.dark-mode .text-stone-900 { color: #e5e5e5 !important; }
+        body.dark-mode .text-stone-800 { color: #d0d0d0 !important; }
+        body.dark-mode .text-stone-700 { color: #b0b0b0 !important; }
+        body.dark-mode .text-stone-600 { color: #909090 !important; }
+        body.dark-mode .text-stone-500 { color: #707070 !important; }
+        body.dark-mode .border-stone-200 { border-color: #404040 !important; }
+        body.dark-mode .border-stone-100 { border-color: #353535 !important; }
+        body.dark-mode .bg-stone-100 { background-color: #2d2d2d !important; }
+        body.dark-mode nav { background-color: #2d2d2d !important; border-bottom-color: #404040 !important; }
+        body.dark-mode .bg-amber-50 { background-color: #332a1a !important; }
+        body.dark-mode .border-amber-200 { border-color: #5a4a2a !important; }
+        body.dark-mode .bg-blue-50 { background-color: #1a2a3a !important; }
+        body.dark-mode .bg-red-50 { background-color: #3a1a1a !important; }
+        body.dark-mode .bg-purple-50 { background-color: #2a1a3a !important; }
+        body.dark-mode .text-amber-800 { color: #d4b896 !important; }
+        body.dark-mode .text-amber-900 { color: #c89860 !important; }
+        body.dark-mode .bg-emerald-100 { background-color: #1a3a2a !important; }
+        body.dark-mode .text-emerald-800 { color: #7cbd9e !important; }
+        body.dark-mode .bg-blue-100 { background-color: #1a2a3a !important; }
+        body.dark-mode .text-blue-800 { color: #7cb5e8 !important; }
+        body.dark-mode .bg-violet-100 { background-color: #2a1a3a !important; }
+        body.dark-mode .text-violet-800 { color: #b79ce8 !important; }
+        body.dark-mode .bg-stone-900 { background-color: #1a1a1a !important; }
+        body.dark-mode .bg-gradient-to-r { background-color: #2d2d2d !important; }
+        body.dark-mode .bg-gradient-to-br { background-color: #2d2d2d !important; }
+
+        /* Copy notification */
+        .copy-notification {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            background-color: #10b981;
+            color: white;
+            padding: 12px 20px;
+            border-radius: 8px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            animation: slideIn 0.3s ease, slideOut 0.3s ease 2.7s;
+            z-index: 9999;
+        }
+        @keyframes slideIn { from { transform: translateX(400px); opacity: 0; } to { transform: translateX(0); opacity: 1; } }
+        @keyframes slideOut { from { transform: translateX(0); opacity: 1; } to { transform: translateX(400px); opacity: 0; } }
+
+        /* Font Awesome Icon Styling */
+        i.fas, i.far {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.3s ease;
+        }
+        
+        button i {
+            font-size: 1rem;
+        }
     </style>
 </head>
 <body class="bg-stone-50 text-stone-800 antialiased min-h-screen">
@@ -43,14 +105,56 @@
                     </div>
                     <span class="font-bold text-xl tracking-tight text-stone-900">CloudShell<span class="text-amber-600">Explorer</span></span>
                 </div>
-                <div class="text-sm font-medium text-stone-500 bg-stone-100 px-3 py-1 rounded-full">
-                    Interactive Reference Guide v2
+                <div class="flex items-center gap-4">
+                    <div class="text-sm font-medium text-stone-500 bg-stone-100 px-3 py-1 rounded-full">
+                        Interactive Reference Guide v2
+                    </div>
+                    <div class="flex gap-2">
+                        <!-- History Button -->
+                        <button id="historyBtn" class="px-3 py-2 text-stone-600 hover:text-amber-600 transition-colors" title="View command history">
+                            <i class="fas fa-history text-lg"></i>
+                        </button>
+                        <!-- Bookmarks Button -->
+                        <button id="bookmarksBtn" class="px-3 py-2 text-stone-600 hover:text-amber-600 transition-colors" title="View bookmarked commands">
+                            <i class="fas fa-bookmark text-lg"></i>
+                        </button>
+                        <!-- Dark Mode Toggle -->
+                        <button id="darkModeToggle" class="px-3 py-2 text-stone-600 hover:text-amber-600 transition-colors" title="Toggle dark mode">
+                            <i class="fas fa-moon text-lg"></i>
+                        </button>
+                    </div>
                 </div>
             </div>
         </div>
     </nav>
 
     <main class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+        
+        <!-- History Modal -->
+        <div id="historyModal" class="hidden fixed inset-0 bg-black bg-opacity-50 z-50 flex items-center justify-center p-4">
+            <div class="bg-white dark:bg-stone-900 rounded-2xl max-w-2xl w-full max-h-96 overflow-auto">
+                <div class="sticky top-0 bg-white dark:bg-stone-900 border-b border-stone-200 dark:border-stone-700 p-6 flex justify-between items-center">
+                    <h2 class="text-2xl font-bold text-stone-900 dark:text-white"><i class="fas fa-history mr-2"></i>Command History</h2>
+                    <button onclick="document.getElementById('historyModal').classList.add('hidden')" class="text-stone-600 dark:text-stone-400 hover:text-stone-900"><i class="fas fa-times text-lg"></i></button>
+                </div>
+                <div id="historyList" class="p-6 space-y-2">
+                    <p class="text-stone-600 dark:text-stone-400">No history yet. Run commands to build your history!</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Bookmarks Modal -->
+        <div id="bookmarksModal" class="hidden fixed inset-0 bg-black bg-opacity-50 z-50 flex items-center justify-center p-4">
+            <div class="bg-white dark:bg-stone-900 rounded-2xl max-w-2xl w-full max-h-96 overflow-auto">
+                <div class="sticky top-0 bg-white dark:bg-stone-900 border-b border-stone-200 dark:border-stone-700 p-6 flex justify-between items-center">
+                    <h2 class="text-2xl font-bold text-stone-900 dark:text-white"><i class="fas fa-star mr-2"></i>Bookmarked Commands</h2>
+                    <button onclick="document.getElementById('bookmarksModal').classList.add('hidden')" class="text-stone-600 dark:text-stone-400 hover:text-stone-900"><i class="fas fa-times text-lg"></i></button>
+                </div>
+                <div id="bookmarksList" class="p-6 space-y-2">
+                    <p class="text-stone-600 dark:text-stone-400">No bookmarks yet. Click ⭐ on any command to bookmark it!</p>
+                </div>
+            </div>
+        </div>
         
         <div class="mb-10">
             <h1 class="text-3xl font-bold text-stone-900 mb-4">Mastering the AWS Command Line</h1>
@@ -922,17 +1026,25 @@
                 card.className = "bg-white rounded-xl shadow-sm border border-stone-200 transition-all duration-300 overflow-hidden group";
                 
                 card.innerHTML = `
-                    <div class="p-5 cursor-pointer flex flex-col md:flex-row md:items-center justify-between gap-4" onclick="toggleCard(${index})">
-                        <div class="flex-1">
+                    <div class="p-5 cursor-pointer flex flex-col md:flex-row md:items-center justify-between gap-4">
+                        <div class="flex-1" onclick="toggleCard(${index})">
                             <div class="flex items-center gap-3 mb-2">
                                 <span class="text-xs font-semibold px-2.5 py-0.5 rounded border ${colorClass}">${cmd.category}</span>
                                 <span class="text-xs font-medium text-stone-500 uppercase tracking-wider">${cmd.service} &bull; ${cmd.action}</span>
                             </div>
                             <h3 class="font-mono text-sm md:text-base text-stone-900 font-bold group-hover:text-amber-600 transition-colors break-all md:break-normal">${cmd.command}</h3>
                         </div>
-                        <div class="flex items-center text-stone-400 group-hover:text-amber-500 shrink-0">
-                            <span class="text-sm mr-2 font-medium hidden md:block">Details</span>
-                            <div id="arrow-${index}" class="rotate-arrow text-xl leading-none">&#9662;</div>
+                        <div class="flex items-center gap-2 shrink-0">
+                            <button onclick="copyCommand('${cmd.command.replace(/'/g, "\\'")}', event)" class="p-2 text-stone-400 hover:text-amber-600 transition-colors" title="Copy command">
+                                <i class="fas fa-copy"></i>
+                            </button>
+                            <button onclick="toggleBookmark(${index}, '${cmd.command.replace(/'/g, "\\'")}', event)" class="p-2 text-stone-400 hover:text-amber-600 transition-colors bookmark-btn" id="bookmark-${index}" title="Bookmark command">
+                                <i class="far fa-star"></i>
+                            </button>
+                            <div class="flex items-center text-stone-400 group-hover:text-amber-500 cursor-pointer" onclick="toggleCard(${index})">
+                                <span class="text-sm mr-2 font-medium hidden md:block">Details</span>
+                                <div id="arrow-${index}" class="rotate-arrow text-xl leading-none">&#9662;</div>
+                            </div>
                         </div>
                     </div>
                     
@@ -964,6 +1076,9 @@
                     </div>
                 `;
                 grid.appendChild(card);
+                
+                // Update bookmark button appearance
+                updateBookmarkButton(index);
             });
         }
 
@@ -992,10 +1107,177 @@
             });
         }
 
+        // Dark Mode Functions
+        function initDarkMode() {
+            const isDarkMode = localStorage.getItem('darkMode') === 'true';
+            if (isDarkMode) {
+                document.body.classList.add('dark-mode');
+                const icon = document.getElementById('darkModeToggle').querySelector('i');
+                icon.classList.remove('fa-moon');
+                icon.classList.add('fa-sun');
+            }
+        }
+
+        function toggleDarkMode() {
+            document.body.classList.toggle('dark-mode');
+            const isDarkMode = document.body.classList.contains('dark-mode');
+            localStorage.setItem('darkMode', isDarkMode);
+            const icon = document.getElementById('darkModeToggle').querySelector('i');
+            if (isDarkMode) {
+                icon.classList.remove('fa-moon');
+                icon.classList.add('fa-sun');
+            } else {
+                icon.classList.remove('fa-sun');
+                icon.classList.add('fa-moon');
+            }
+        }
+
+        // Copy to Clipboard Functions
+        function copyCommand(command, event) {
+            event.stopPropagation();
+            navigator.clipboard.writeText(command).then(() => {
+                addToHistory(command);
+                showNotification('Command copied to clipboard!');
+            }).catch(() => {
+                alert('Failed to copy command');
+            });
+        }
+
+        function showNotification(message) {
+            const notification = document.createElement('div');
+            notification.className = 'copy-notification';
+            notification.textContent = message;
+            document.body.appendChild(notification);
+            setTimeout(() => notification.remove(), 3000);
+        }
+
+        // History Functions
+        function addToHistory(command) {
+            let history = JSON.parse(localStorage.getItem('commandHistory') || '[]');
+            const timestamp = new Date().toLocaleTimeString();
+            history.unshift({ command, timestamp });
+            history = history.slice(0, 50); // Keep last 50
+            localStorage.setItem('commandHistory', JSON.stringify(history));
+        }
+
+        function getHistory() {
+            return JSON.parse(localStorage.getItem('commandHistory') || '[]');
+        }
+
+        function displayHistory() {
+            const history = getHistory();
+            const historyList = document.getElementById('historyList');
+            
+            if (history.length === 0) {
+                historyList.innerHTML = '<p class="text-stone-600 dark:text-stone-400">No history yet. Run commands to build your history!</p>';
+            } else {
+                historyList.innerHTML = history.map((item, idx) => `
+                    <div class="flex items-center justify-between bg-stone-50 dark:bg-stone-800 p-3 rounded border border-stone-200 dark:border-stone-700">
+                        <div class="flex-1 font-mono text-sm text-stone-800 dark:text-stone-200">${item.command}</div>
+                        <div class="flex gap-2">
+                            <span class="text-xs text-stone-500 dark:text-stone-400">${item.timestamp}</span>
+                            <button onclick="copyHistoryCommand('${item.command.replace(/'/g, "\\'")}')" class="text-amber-600 hover:text-amber-700"><i class="fas fa-copy"></i></button>
+                        </div>
+                    </div>
+                `).join('');
+            }
+        }
+
+        function copyHistoryCommand(command) {
+            navigator.clipboard.writeText(command);
+            showNotification('Command copied to clipboard!');
+        }
+
+        // Bookmark Functions
+        function toggleBookmark(index, command, event) {
+            event.stopPropagation();
+            let bookmarks = JSON.parse(localStorage.getItem('bookmarkedCommands') || '[]');
+            const isBookmarked = bookmarks.includes(command);
+            
+            if (isBookmarked) {
+                bookmarks = bookmarks.filter(c => c !== command);
+                showNotification('Bookmark removed');
+            } else {
+                bookmarks.push(command);
+                showNotification('Command bookmarked!');
+            }
+            
+            localStorage.setItem('bookmarkedCommands', JSON.stringify(bookmarks));
+            updateBookmarkButton(index);
+        }
+
+        function updateBookmarkButton(index) {
+            const btn = document.getElementById(`bookmark-${index}`);
+            if (!btn) return;
+            
+            const command = commandsData[index]?.command;
+            const bookmarks = JSON.parse(localStorage.getItem('bookmarkedCommands') || '[]');
+            const isBookmarked = bookmarks.includes(command);
+            
+            const icon = btn.querySelector('i');
+            if (isBookmarked) {
+                icon.classList.remove('far');
+                icon.classList.add('fas');
+                btn.style.color = '#f59e0b';
+            } else {
+                icon.classList.remove('fas');
+                icon.classList.add('far');
+                btn.style.color = '';
+            }
+        }
+
+        function getBookmarks() {
+            return JSON.parse(localStorage.getItem('bookmarkedCommands') || '[]');
+        }
+
+        function displayBookmarks() {
+            const bookmarks = getBookmarks();
+            const bookmarksList = document.getElementById('bookmarksList');
+            
+            if (bookmarks.length === 0) {
+                bookmarksList.innerHTML = '<p class="text-stone-600 dark:text-stone-400">No bookmarks yet. Click ⭐ on any command to bookmark it!</p>';
+            } else {
+                bookmarksList.innerHTML = bookmarks.map(command => `
+                    <div class="flex items-center justify-between bg-stone-50 dark:bg-stone-800 p-3 rounded border border-stone-200 dark:border-stone-700">
+                        <div class="flex-1 font-mono text-sm text-stone-800 dark:text-stone-200">${command}</div>
+                        <div class="flex gap-2">
+                            <button onclick="copyHistoryCommand('${command.replace(/'/g, "\\'")}')" class="text-amber-600 hover:text-amber-700"><i class="fas fa-copy"></i></button>
+                            <button onclick="removeBookmark('${command.replace(/'/g, "\\'")}')" class="text-red-600 hover:text-red-700"><i class="fas fa-trash"></i></button>
+                        </div>
+                    </div>
+                `).join('');
+            }
+        }
+
+        function removeBookmark(command) {
+            let bookmarks = JSON.parse(localStorage.getItem('bookmarkedCommands') || '[]');
+            bookmarks = bookmarks.filter(c => c !== command);
+            localStorage.setItem('bookmarkedCommands', JSON.stringify(bookmarks));
+            displayBookmarks();
+            showNotification('Bookmark removed');
+            // Update all bookmark buttons
+            commandsData.forEach((_, idx) => updateBookmarkButton(idx));
+        }
+
+        // Setup event listeners
+        function setupEventListeners() {
+            document.getElementById('darkModeToggle').addEventListener('click', toggleDarkMode);
+            document.getElementById('historyBtn').addEventListener('click', () => {
+                displayHistory();
+                document.getElementById('historyModal').classList.remove('hidden');
+            });
+            document.getElementById('bookmarksBtn').addEventListener('click', () => {
+                displayBookmarks();
+                document.getElementById('bookmarksModal').classList.remove('hidden');
+            });
+        }
+
         window.onload = () => {
+            initDarkMode();
             initChart();
             renderCommands();
             setupFilters();
+            setupEventListeners();
         };
 
     </script>
