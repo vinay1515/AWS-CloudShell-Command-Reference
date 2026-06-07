@@ -52,11 +52,79 @@
 
     <main class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
         
-        <div class="mb-10 max-w-3xl">
+        <div class="mb-10">
             <h1 class="text-3xl font-bold text-stone-900 mb-4">Mastering the AWS Command Line</h1>
-            <p class="text-lg text-stone-600 leading-relaxed">
+            <p class="text-lg text-stone-600 leading-relaxed text-justify">
                 Welcome to the expanded interactive companion for the AWS CloudShell Command Reference. This application has been enriched with an extensive selection of critical commands across modern AWS cloud architectures—spanning Compute, Storage, Security, Orchestration, Database, Serverless, and container environments. Use the unified search and difficulty filters to explore real-world production snippets.
             </p>
+        </div>
+
+        <!-- AWS Information Section -->
+        <div class="mb-12 space-y-6">
+            <div class="bg-gradient-to-r from-amber-50 to-orange-50 rounded-2xl border border-amber-200 p-8">
+                <h2 class="text-2xl font-bold text-stone-900 mb-4">What is AWS?</h2>
+                <p class="text-stone-700 leading-relaxed text-justify">
+                    Amazon Web Services (AWS) is a comprehensive, evolving cloud computing platform provided by Amazon. It offers over 200+ fully featured services including compute, storage, databases, machine learning, analytics, networking, security, and more. AWS enables businesses to build scalable, reliable, and cost-effective applications without the overhead of managing physical infrastructure. With data centers distributed globally across multiple regions, AWS provides low-latency access and high availability for applications serving customers worldwide.
+                </p>
+            </div>
+
+            <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
+                <div class="bg-white rounded-2xl shadow-sm border border-stone-200 p-6">
+                    <h2 class="text-xl font-bold text-stone-900 mb-4">Why Learn AWS?</h2>
+                    <ul class="space-y-3 text-stone-700">
+                        <li class="flex gap-3">
+                            <span class="text-amber-600 font-bold mt-1">✓</span>
+                            <span><b>Industry Demand:</b> AWS is the market leader with ~32% cloud market share. Most enterprises use AWS for critical infrastructure.</span>
+                        </li>
+                        <li class="flex gap-3">
+                            <span class="text-amber-600 font-bold mt-1">✓</span>
+                            <span><b>Career Growth:</b> AWS skills command premium salaries and create abundant job opportunities across industries and geographies.</span>
+                        </li>
+                        <li class="flex gap-3">
+                            <span class="text-amber-600 font-bold mt-1">✓</span>
+                            <span><b>Comprehensive Ecosystem:</b> AWS covers every aspect of cloud computing, enabling you to build complete solutions from infrastructure to AI/ML.</span>
+                        </li>
+                        <li class="flex gap-3">
+                            <span class="text-amber-600 font-bold mt-1">✓</span>
+                            <span><b>Cost Optimization:</b> Understanding AWS allows organizations to reduce infrastructure costs by 30-50% through intelligent resource allocation.</span>
+                        </li>
+                        <li class="flex gap-3">
+                            <span class="text-amber-600 font-bold mt-1">✓</span>
+                            <span><b>Security & Compliance:</b> AWS provides enterprise-grade security controls meeting international compliance standards (ISO, HIPAA, SOC 2, PCI-DSS).</span>
+                        </li>
+                    </ul>
+                </div>
+
+                <div class="bg-white rounded-2xl shadow-sm border border-stone-200 p-6">
+                    <h2 class="text-xl font-bold text-stone-900 mb-4">Common Uses of AWS</h2>
+                    <ul class="space-y-3 text-stone-700">
+                        <li class="flex gap-3">
+                            <span class="text-amber-600 font-bold">◆</span>
+                            <span><b>Web Applications:</b> Host scalable, highly available web applications with auto-scaling and load balancing.</span>
+                        </li>
+                        <li class="flex gap-3">
+                            <span class="text-amber-600 font-bold">◆</span>
+                            <span><b>Big Data & Analytics:</b> Process massive datasets using services like EMR, Redshift, and Athena for business intelligence.</span>
+                        </li>
+                        <li class="flex gap-3">
+                            <span class="text-amber-600 font-bold">◆</span>
+                            <span><b>Machine Learning:</b> Build, train, and deploy ML models using SageMaker, enabling predictive analytics and AI applications.</span>
+                        </li>
+                        <li class="flex gap-3">
+                            <span class="text-amber-600 font-bold">◆</span>
+                            <span><b>Backup & Disaster Recovery:</b> Implement robust backup strategies and disaster recovery solutions with S3, Glacier, and AWS Backup.</span>
+                        </li>
+                        <li class="flex gap-3">
+                            <span class="text-amber-600 font-bold">◆</span>
+                            <span><b>IoT Solutions:</b> Connect, manage, and analyze millions of IoT devices using AWS IoT services for real-time monitoring.</span>
+                        </li>
+                        <li class="flex gap-3">
+                            <span class="text-amber-600 font-bold">◆</span>
+                            <span><b>Microservices:</b> Build containerized architectures using ECS, EKS, and Lambda for modular, scalable applications.</span>
+                        </li>
+                    </ul>
+                </div>
+            </div>
         </div>
 
         <div class="grid grid-cols-1 lg:grid-cols-12 gap-8">
@@ -82,7 +150,7 @@
 
             <div class="lg:col-span-8 flex flex-col space-y-6">
                 
-                <div class="bg-white rounded-2xl shadow-sm border border-stone-200 p-4 md:p-6 sticky top-20 z-40">
+                <div class="bg-white rounded-2xl shadow-sm border border-stone-200 p-4 md:p-6">
                     <h2 class="text-lg font-bold text-stone-900 mb-4">Explore Commands</h2>
                     <p class="text-sm text-stone-500 mb-4">
                         Filter the command repository by difficulty level or search for specific tools, services, or keywords to instantly find the operational snippet you require.
@@ -108,6 +176,134 @@
                 <div id="commandsGrid" class="flex flex-col gap-4 pb-12">
                 </div>
 
+            </div>
+        </div>
+
+        <!-- About the Publisher Section -->
+        <div class="mt-20 pt-12 border-t border-stone-200">
+            <div class="mb-8">
+                <h2 class="text-4xl font-bold text-stone-900 mb-2">About the Publisher</h2>
+                <p class="text-stone-600 text-lg">Meet the mind behind CloudShell Explorer</p>
+            </div>
+
+            <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
+                <!-- Main Profile Card -->
+                <div class="lg:col-span-2">
+                    <div class="bg-gradient-to-br from-amber-50 via-orange-50 to-amber-100 rounded-3xl border border-amber-300 p-10 shadow-lg">
+                        <div class="flex items-start gap-6 mb-8">
+                            <div class="w-24 h-24 bg-gradient-to-br from-amber-500 to-orange-600 rounded-2xl flex items-center justify-center text-white text-4xl font-bold shadow-lg">
+                                VK
+                            </div>
+                            <div class="flex-1">
+                                <h3 class="text-3xl font-bold text-stone-900 mb-1">Vinay Kumar Duvva</h3>
+                                <p class="text-lg font-semibold text-amber-800 mb-3">☁️ Cloud & Infrastructure Engineer</p>
+                                <div class="flex flex-wrap gap-2">
+                                    <span class="bg-blue-200 text-blue-900 px-3 py-1 rounded-full text-sm font-medium">AWS</span>
+                                    <span class="bg-red-200 text-red-900 px-3 py-1 rounded-full text-sm font-medium">GCP</span>
+                                    <span class="bg-purple-200 text-purple-900 px-3 py-1 rounded-full text-sm font-medium">Azure</span>
+                                    <span class="bg-green-200 text-green-900 px-3 py-1 rounded-full text-sm font-medium">DevOps</span>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="space-y-6">
+                            <div class="bg-white bg-opacity-70 rounded-2xl p-6 border border-amber-200">
+                                <h4 class="text-lg font-bold text-stone-900 mb-3 flex items-center gap-2">
+                                    <span class="text-2xl">💼</span>
+                                    Professional Background
+                                </h4>
+                                <p class="text-stone-700 leading-relaxed text-justify">
+                                    Based in Hyderabad, with two years at Cognizant as Senior Process Executive in Digital Content Services. Specialized in high-volume data curation and extraction for Google operations, maintaining 99.9% quality standards while managing tight turnaround requirements. Built strong discipline in ownership, troubleshooting under pressure, and customer-centric problem-solving.
+                                </p>
+                            </div>
+
+                            <div class="bg-white bg-opacity-70 rounded-2xl p-6 border border-amber-200">
+                                <h4 class="text-lg font-bold text-stone-900 mb-3 flex items-center gap-2">
+                                    <span class="text-2xl">🏗️</span>
+                                    Cloud & Infrastructure Expertise
+                                </h4>
+                                <p class="text-stone-700 leading-relaxed text-justify">
+                                    Hands-on experience across AWS, GCP, and Azure covering EC2, S3, VPCs, Kubernetes clusters, Terraform automation, monitoring, and network configuration. Certified AWS Solutions Architect Associate, Google Professional Cloud Architect, and Azure Network Engineer Associate.
+                                </p>
+                            </div>
+
+                            <div class="bg-white bg-opacity-70 rounded-2xl p-6 border border-amber-200">
+                                <h4 class="text-lg font-bold text-stone-900 mb-3 flex items-center gap-2">
+                                    <span class="text-2xl">🚀</span>
+                                    Career Vision
+                                </h4>
+                                <p class="text-stone-700 leading-relaxed text-justify">
+                                    Transitioning fully into cloud infrastructure roles. Driven by technical problem-solving, customer impact, and continuous learning. Production-focused, quality-driven background provides a strong foundation for growth in cloud engineering.
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Side Panel with Quick Links and Certifications -->
+                <div class="space-y-6">
+                    <!-- Quick Connect -->
+                    <div class="bg-white rounded-2xl shadow-md border border-stone-200 p-6">
+                        <h4 class="text-lg font-bold text-stone-900 mb-4 flex items-center gap-2">
+                            <span class="text-2xl">🔗</span>
+                            Connect
+                        </h4>
+                        <div class="space-y-3">
+                            <a href="https://www.linkedin.com/in/vinay-kumar-duvva/" target="_blank" class="flex items-center gap-3 bg-blue-600 hover:bg-blue-700 text-white font-medium px-4 py-3 rounded-lg transition-all transform hover:scale-105 shadow-md">
+                                <span class="text-lg">in</span>
+                                <span>LinkedIn</span>
+                            </a>
+                            <a href="https://github.com/vinay1515" target="_blank" class="flex items-center gap-3 bg-stone-900 hover:bg-stone-800 text-white font-medium px-4 py-3 rounded-lg transition-all transform hover:scale-105 shadow-md">
+                                <span class="text-lg">⚙️</span>
+                                <span>GitHub</span>
+                            </a>
+                            <a href="https://vinay-kumar-duvva-portfoilo.s3.ap-south-1.amazonaws.com/My+Portfoilo+Website/index.html" target="_blank" class="flex items-center gap-3 bg-orange-600 hover:bg-orange-700 text-white font-medium px-4 py-3 rounded-lg transition-all transform hover:scale-105 shadow-md">
+                                <span class="text-lg">🌐</span>
+                                <span>Portfolio</span>
+                            </a>
+                            <a href="mailto:duvvavinaykumar@gmail.com" class="flex items-center gap-3 bg-red-600 hover:bg-red-700 text-white font-medium px-4 py-3 rounded-lg transition-all transform hover:scale-105 shadow-md">
+                                <span class="text-lg">✉️</span>
+                                <span>Email</span>
+                            </a>
+                        </div>
+                    </div>
+
+                    <!-- Certifications -->
+                    <div class="bg-white rounded-2xl shadow-md border border-stone-200 p-6">
+                        <h4 class="text-lg font-bold text-stone-900 mb-4 flex items-center gap-2">
+                            <span class="text-2xl">🏆</span>
+                            Certifications
+                        </h4>
+                        <div class="space-y-2">
+                            <div class="bg-blue-50 border-l-4 border-blue-500 pl-3 py-2">
+                                <p class="font-semibold text-blue-900 text-sm">AWS Solutions Architect</p>
+                                <p class="text-blue-700 text-xs">Associate</p>
+                            </div>
+                            <div class="bg-red-50 border-l-4 border-red-500 pl-3 py-2">
+                                <p class="font-semibold text-red-900 text-sm">Google Professional</p>
+                                <p class="text-red-700 text-xs">Cloud Architect</p>
+                            </div>
+                            <div class="bg-purple-50 border-l-4 border-purple-500 pl-3 py-2">
+                                <p class="font-semibold text-purple-900 text-sm">Azure Network</p>
+                                <p class="text-purple-700 text-xs">Engineer Associate</p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Location & Focus -->
+                    <div class="bg-gradient-to-br from-amber-50 to-orange-50 rounded-2xl border border-amber-200 p-6">
+                        <h4 class="text-lg font-bold text-stone-900 mb-4 flex items-center gap-2">
+                            <span class="text-2xl">📍</span>
+                            Location & Focus
+                        </h4>
+                        <p class="text-stone-700 font-semibold mb-3">Hyderabad, India</p>
+                        <div class="flex flex-wrap gap-2">
+                            <span class="bg-amber-200 text-amber-900 px-3 py-1 rounded-full text-xs font-medium">Infrastructure</span>
+                            <span class="bg-amber-200 text-amber-900 px-3 py-1 rounded-full text-xs font-medium">Automation</span>
+                            <span class="bg-amber-200 text-amber-900 px-3 py-1 rounded-full text-xs font-medium">Cloud</span>
+                        </div>
+                    </div>
+                </div>
             </div>
         </div>
     </main>
@@ -393,6 +589,176 @@
                 meaning: "<b>create-db-snapshot</b>: Initiates live hot-backup operations.<br><b>--db-instance-identifier</b>: Selected target instance database stack.",
                 usage: "Executed right before critical schema alterations, code migrations, or emergency maintenance procedures to guarantee a safe recovery fallback.",
                 reason: "<b>Zero Data Loss Best Practices.</b> Guarantees rapid, restorable database environments without disturbing structural application integrity."
+            },
+            {
+                category: "Beginner",
+                command: "aws s3 mb s3://my-unique-bucket-name",
+                service: "S3",
+                action: "Create Bucket",
+                purpose: "Creates a brand-new, globally unique Amazon S3 storage bucket in your default AWS region.",
+                meaning: "<b>aws s3</b>: Interacts with S3.<br><b>mb</b>: Stands for 'make bucket'.<br><b>s3://my-unique-bucket-name</b>: The globally unique bucket name to create.",
+                usage: "Used when you need to provision new S3 storage resources for application data, backups, website hosting, or logs.",
+                reason: "<b>Storage Foundation.</b> S3 buckets are the fundamental storage unit in AWS. Creating them programmatically ensures consistency and automation in infrastructure setup."
+            },
+            {
+                category: "Intermediate",
+                command: "aws s3 cp localfile.txt s3://my-bucket/",
+                service: "S3",
+                action: "Copy Files",
+                purpose: "Copies files or directories between your CloudShell local storage and an S3 bucket (or between two S3 buckets).",
+                meaning: "<b>aws s3 cp</b>: Copy command for S3.<br><b>localfile.txt</b>: Source file path.<br><b>s3://my-bucket/</b>: Destination S3 bucket path.",
+                usage: "Used to upload local files to S3 for backup, deploy application code, or transfer data between CloudShell and cloud storage.",
+                reason: "<b>File Transfer Efficiency.</b> Provides a simple, intuitive interface for moving files to cloud storage without complex APIs, supporting recursive copying with wildcards."
+            },
+            {
+                category: "Intermediate",
+                command: "aws ec2 stop-instances --instance-ids i-12345",
+                service: "EC2",
+                action: "Stop Instance",
+                purpose: "Safely shuts down a running Amazon EC2 instance without terminating it permanently.",
+                meaning: "<b>aws ec2</b>: Interacts with EC2.<br><b>stop-instances</b>: Signals shutdown sequence.<br><b>--instance-ids</b>: Specifies target instance IDs.",
+                usage: "Commonly used to pause development environments, staging servers, or non-production workloads to reduce cloud costs when not in use.",
+                reason: "<b>Cost Optimization.</b> Stopping instances halts compute charges while preserving attached storage, snapshots, and configurations for later restart."
+            },
+            {
+                category: "Intermediate",
+                command: "aws lambda list-functions --max-items 10",
+                service: "Lambda",
+                action: "List Functions with Limit",
+                purpose: "Lists AWS Lambda functions in your active region with a maximum item limit to control output size.",
+                meaning: "<b>aws lambda list-functions</b>: Requests all serverless functions.<br><b>--max-items</b>: Limits the number of results returned.",
+                usage: "Useful for accounts with large numbers of Lambda functions to paginate results and avoid overwhelming terminal output.",
+                reason: "<b>Output Control.</b> Large AWS accounts can have hundreds of Lambda functions. Limiting results improves readability and reduces API response times."
+            },
+            {
+                category: "Advanced",
+                command: "aws ec2 run-instances --image-id ami-0c55b159cbfafe1f0 --count 1 --instance-type t2.micro --key-name MyKeyPair",
+                service: "EC2",
+                action: "Launch New Instance",
+                purpose: "Launches a brand-new Amazon EC2 virtual machine from scratch with specified configuration parameters.",
+                meaning: "<b>run-instances</b>: Creates and boots a new EC2 instance.<br><b>--image-id</b>: Specifies the AMI (Amazon Machine Image).<br><b>--instance-type</b>: Defines instance size (t2.micro, t3.small, etc.).<br><b>--key-name</b>: SSH key pair for access.",
+                usage: "Employed during infrastructure provisioning, auto-scaling events, or when setting up new servers for applications and services.",
+                reason: "<b>Infrastructure Automation.</b> Programmatically launching instances ensures consistency, enables Infrastructure-as-Code practices, and eliminates manual console steps."
+            },
+            {
+                category: "Advanced",
+                command: "aws dynamodb put-item --table-name Users --item '{\"UserId\": {\"S\": \"123\"}, \"Name\": {\"S\": \"Alice\"}}'",
+                service: "DynamoDB",
+                action: "Insert NoSQL Record",
+                purpose: "Inserts a new data record (item) directly into an Amazon DynamoDB NoSQL table with strict type definitions.",
+                meaning: "<b>put-item</b>: Creates or overwrites an item in DynamoDB.<br><b>--table-name</b>: Target DynamoDB table.<br><b>--item</b>: JSON payload with typed attributes (S=String, N=Number, etc.).",
+                usage: "Used by applications and scripts to programmatically store user profiles, configuration data, or transactional records in DynamoDB.",
+                reason: "<b>Direct Data Ingestion.</b> Allows serverless applications and automation scripts to write data directly without database drivers or connection pooling overhead."
+            },
+            {
+                category: "Beginner",
+                command: "aws ec2 describe-vpcs",
+                service: "Networking",
+                action: "List Virtual Networks",
+                purpose: "Lists all Virtual Private Clouds (VPCs) in your region, showing their network boundaries (CIDR blocks) and state.",
+                meaning: "<b>aws ec2</b>: Interacts with EC2 service.<br><b>describe-vpcs</b>: Retrieves VPC information.<br>Returns VPC IDs, CIDR blocks, and current states.",
+                usage: "Used by network administrators to view available network environments and their configurations before launching resources.",
+                reason: "<b>Network Architecture Visibility.</b> Understanding your VPC layout is essential before deploying instances, databases, or security groups to the correct network boundaries."
+            },
+            {
+                category: "Beginner",
+                command: "aws s3 rm s3://my-bucket/file.txt",
+                service: "S3",
+                action: "Remove File",
+                purpose: "Permanently removes a specific file or object from an S3 bucket.",
+                meaning: "<b>aws s3 rm</b>: Delete command for S3.<br><b>s3://my-bucket/file.txt</b>: Full path to the object to delete.",
+                usage: "Used to clean up old files, remove test data, or permanently delete unwanted objects from S3 buckets.",
+                reason: "<b>Storage Management.</b> Helps maintain bucket hygiene, reduce storage costs, and ensure sensitive files are permanently removed."
+            },
+            {
+                category: "Beginner",
+                command: "aws sns list-topics",
+                service: "SNS",
+                action: "List Notification Topics",
+                purpose: "Displays all Simple Notification Service (SNS) communication channels (topics) created in your AWS account.",
+                meaning: "<b>aws sns</b>: Targets the SNS messaging service.<br><b>list-topics</b>: Returns all topic ARNs and metadata.",
+                usage: "Used to verify available messaging channels and find topic ARNs for subscribing applications or publishing messages.",
+                reason: "<b>Messaging Architecture Discovery.</b> Quickly identifies all SNS topics available for event notifications and system alerts."
+            },
+            {
+                category: "Beginner",
+                command: "aws --version",
+                service: "CLI Configuration",
+                action: "Check CLI Version",
+                purpose: "Displays the installed version of the AWS CLI tool, Python interpreter, and OS environment running inside CloudShell.",
+                meaning: "<b>aws --version</b>: Queries the CLI tool for version metadata.<br>Returns version numbers and system information.",
+                usage: "Commonly run when troubleshooting compatibility issues or confirming that CloudShell has the latest AWS CLI features.",
+                reason: "<b>Compatibility Verification.</b> Ensures your CLI version supports specific commands and features needed for your automation scripts."
+            },
+            {
+                category: "Intermediate",
+                command: "aws cloudwatch get-metric-statistics --namespace AWS/EC2 --metric-name CPUUtilization --period 3600 --start-time 2026-06-06T00:00:00Z --end-time 2026-06-07T00:00:00Z --statistics Average",
+                service: "CloudWatch",
+                action: "Retrieve Performance Metrics",
+                purpose: "Retrieves historical performance metrics (like average CPU usage) for your resources over a specified timeframe.",
+                meaning: "<b>get-metric-statistics</b>: Fetches metric data.<br><b>--namespace</b>: AWS service (AWS/EC2, AWS/RDS, etc.).<br><b>--period</b>: Time interval in seconds.<br><b>--statistics</b>: Aggregation type (Average, Maximum, Sum, etc.).",
+                usage: "Used for capacity planning, performance analysis, and billing forecasting by examining historical resource consumption patterns.",
+                reason: "<b>Data-Driven Operations.</b> Provides factual performance data to guide infrastructure decisions and identify optimization opportunities."
+            },
+            {
+                category: "Intermediate",
+                command: "aws iam attach-user-policy --user-name Alice --policy-arn arn:aws:iam::aws:policy/AmazonS3ReadOnlyAccess",
+                service: "IAM",
+                action: "Grant User Permissions",
+                purpose: "Grants a specific user permission to access resources by binding a managed policy (like S3 Read-Only) to their account.",
+                meaning: "<b>attach-user-policy</b>: Links a policy to a user.<br><b>--user-name</b>: Target IAM user.<br><b>--policy-arn</b>: Full ARN of the policy to attach.",
+                usage: "Executed when onboarding new team members or updating access controls to follow least-privilege principles.",
+                reason: "<b>Access Control Management.</b> Enables secure, auditable permission delegation without managing individual inline policies."
+            },
+            {
+                category: "Intermediate",
+                command: "aws s3api get-bucket-location --bucket my-bucket",
+                service: "S3",
+                action: "Determine Bucket Region",
+                purpose: "Uses the lower-level S3 API layer to find out exactly which physical geographical region hosts a specific bucket.",
+                meaning: "<b>s3api</b>: Low-level S3 API commands.<br><b>get-bucket-location</b>: Retrieves the region constraint.<br><b>--bucket</b>: Target bucket name.",
+                usage: "Used when troubleshooting cross-region replication, identifying data residency requirements, or optimizing latency.",
+                reason: "<b>Regional Awareness.</b> Helps engineers understand data location for compliance, performance, and disaster recovery planning."
+            },
+            {
+                category: "Intermediate",
+                command: "aws ec2 describe-images --owners self",
+                service: "EC2",
+                action: "List Custom AMIs",
+                purpose: "Filters your Amazon Machine Image (AMI) list to show only custom virtual machine templates that you created or own.",
+                meaning: "<b>describe-images</b>: Retrieves AMI information.<br><b>--owners self</b>: Filters to only custom AMIs you own.",
+                usage: "Used to audit custom machine images before launching instances or when managing infrastructure-as-code deployments.",
+                reason: "<b>Image Inventory Management.</b> Helps track custom templates and their versions without cluttering results with AWS-provided base images."
+            },
+            {
+                category: "Advanced",
+                command: "aws ecs update-service --cluster MyCluster --service MyService --force-new-deployment",
+                service: "ECS",
+                action: "Trigger Container Rollout",
+                purpose: "Triggers a rolling update for a containerized application inside Elastic Container Service (ECS), pulling the latest image version immediately.",
+                meaning: "<b>update-service</b>: Modifies ECS service configuration.<br><b>--cluster</b>: Target cluster name.<br><b>--service</b>: Target service name.<br><b>--force-new-deployment</b>: Forces immediate redeployment.",
+                usage: "Executed during deployments to rolling-restart container tasks and pull fresh Docker images from ECR.",
+                reason: "<b>Zero-Downtime Deployments.</b> Enables rapid application updates without manually managing task lifecycles or drain policies."
+            },
+            {
+                category: "Advanced",
+                command: "aws ssm start-session --target i-12345",
+                service: "Systems Manager",
+                action: "Interactive EC2 Access",
+                purpose: "Uses AWS Systems Manager Session Manager to open an interactive, secure terminal tunnel into an EC2 instance without needing open SSH ports.",
+                meaning: "<b>start-session</b>: Initiates remote terminal access.<br><b>--target</b>: EC2 instance ID or Systems Manager resource name.",
+                usage: "Used by security teams to access instances securely without managing SSH keys or exposing instances to public internet.",
+                reason: "<b>Secure Administration.</b> Eliminates SSH key management overhead and port exposure, providing audited terminal access through IAM permissions."
+            },
+            {
+                category: "Advanced",
+                command: "aws route53 list-resource-record-sets --hosted-zone-id Z12345",
+                service: "Route 53",
+                action: "Query DNS Records",
+                purpose: "Retrieves all DNS routing records (like A, AAAA, or CNAME records) mapped inside a specific Route 53 hosted domain zone.",
+                meaning: "<b>route53</b>: AWS Domain Name System service.<br><b>list-resource-record-sets</b>: Retrieves all DNS records.<br><b>--hosted-zone-id</b>: Target hosted zone identifier.",
+                usage: "Used for DNS troubleshooting, auditing domain configurations, and automating DNS record management.",
+                reason: "<b>DNS Automation and Visibility.</b> Provides programmatic access to domain records for infrastructure automation and compliance auditing."
             }
         ];
 
