@@ -155,6 +155,35 @@
         .responsive-h1 { font-size: 1.25rem; }
         @media (min-width: 640px) { .responsive-h1 { font-size: 1.875rem; } }
         @media (min-width: 1024px) { .responsive-h1 { font-size: 2.25rem; } }
+        
+        /* Scroll margin for sticky nav offset */
+        [id] { scroll-margin-top: 80px; }
+        
+        /* Slide-in mobile menu */
+        #mobileMenu { transform: translateX(-100%); transition: transform 300ms ease; box-shadow: 4px 0 24px rgba(15,23,42,0.08); }
+        #mobileMenu.menu-open { transform: translateX(0); }
+        #mobileBackdrop { opacity: 0; transition: opacity 220ms ease; }
+        #mobileBackdrop.show { opacity: 1; }
+
+        /* Inline copy tooltip */
+        .inline-tooltip {
+            position: absolute;
+            background: rgba(17,24,39,0.95);
+            color: #fff;
+            padding: 6px 8px;
+            font-size: 12px;
+            border-radius: 6px;
+            box-shadow: 0 6px 18px rgba(0,0,0,0.15);
+            opacity: 0;
+            transform: translateY(-6px);
+            transition: opacity 160ms ease, transform 160ms ease;
+            pointer-events: none;
+            z-index: 99999;
+        }
+        .inline-tooltip.show { opacity: 1; transform: translateY(0); }
+        /* Back to top button */
+        #backToTop { transition: transform 160ms ease, opacity 160ms ease; }
+        #backToTop.hidden { opacity: 0; transform: translateY(8px); }
     </style>
 </head>
 <body id="top" class="bg-stone-50 text-stone-800 antialiased min-h-screen">
@@ -177,7 +206,15 @@
                     <div class="hidden sm:block text-sm font-medium text-stone-500 bg-stone-100 px-3 py-1 rounded-full">
                         Interactive Reference Guide v2
                     </div>
-                    <div class="flex gap-2">
+                    <!-- Mobile hamburger (shown on all sizes) -->
+                    <button id="mobileMenuBtn" class="p-2 text-stone-600 hover:text-amber-600 transition-colors" title="Open menu">
+                        <i class="fas fa-bars text-lg"></i>
+                    </button>
+                    <div id="navControls" class="flex gap-2 hidden">
+                        <button id="navExploreBtn" class="hidden sm:inline-flex items-center gap-2 bg-amber-600 hover:bg-amber-700 text-white px-3 py-2 rounded-md text-sm" title="Explore Commands">
+                            <i class="fas fa-rocket"></i>
+                            <span>Explore</span>
+                        </button>
                         <!-- Publisher quick-link -->
                         <button id="publisherBtn" class="px-3 py-2 text-stone-600 hover:text-amber-600 transition-colors" title="About the Publisher" onclick="scrollToSection('publisher', event)">
                             <i class="fas fa-user text-lg"></i>
@@ -190,7 +227,7 @@
                         <button id="bookmarksBtn" class="px-3 py-2 text-stone-600 hover:text-amber-600 transition-colors" title="View bookmarked commands">
                             <i class="fas fa-bookmark text-lg"></i>
                         </button>
-                        <!-- Dark Mode Toggle -->
+                        <!-- Dark Mode Toggle (hidden in inline nav) -->
                         <button id="darkModeToggle" class="px-3 py-2 text-stone-600 hover:text-amber-600 transition-colors" title="Toggle dark mode">
                             <i class="fas fa-moon text-lg"></i>
                         </button>
@@ -199,6 +236,34 @@
             </div>
         </div>
     </nav>
+
+    <!-- Mobile Menu Backdrop -->
+    <div id="mobileBackdrop" class="hidden fixed inset-0 z-40 bg-black bg-opacity-40 transition-opacity" aria-hidden="true"></div>
+
+    <!-- Mobile Menu Overlay -->
+    <div id="mobileMenu" class="hidden fixed inset-y-0 left-0 z-50 w-4/5 max-w-sm bg-white p-6 overflow-auto" aria-hidden="true" role="dialog" aria-modal="true" aria-label="Main menu">
+        <div class="flex justify-between items-center mb-6">
+            <div class="flex items-center gap-2">
+                <div class="w-8 h-8 bg-amber-500 rounded flex items-center justify-center text-white font-bold text-xl">_</div>
+                <span class="font-bold text-lg">CloudShellExplorer</span>
+            </div>
+            <button id="mobileMenuClose" class="p-2 text-stone-600"><i class="fas fa-times text-lg"></i></button>
+        </div>
+        <nav class="space-y-4">
+            <a href="#top" onclick="toggleMobileMenu(false);scrollToTop(event)" class="block text-lg font-medium text-stone-800">Home</a>
+            <a href="#commandsGrid" onclick="toggleMobileMenu(false);scrollToSection('commandsGrid', event)" class="block text-lg font-medium text-stone-800">Explore Commands</a>
+            <a href="#whatIsAws" onclick="toggleMobileMenu(false);scrollToSection('whatIsAws', event)" class="block text-lg font-medium text-stone-800">What is AWS?</a>
+            <a href="#publisher" onclick="toggleMobileMenu(false);scrollToSection('publisher', event)" class="block text-lg font-medium text-stone-800">About Publisher</a>
+            <button onclick="toggleMobileMenu(false);displayHistory();document.getElementById('historyModal').classList.remove('hidden')" class="w-full text-left block text-lg font-medium text-stone-800">History</button>
+            <button onclick="toggleMobileMenu(false);displayBookmarks();document.getElementById('bookmarksModal').classList.remove('hidden')" class="w-full text-left block text-lg font-medium text-stone-800">Bookmarks</button>
+            <button onclick="toggleMobileMenu(false);toggleDarkMode()" class="w-full text-left block text-lg font-medium text-stone-800">Toggle Theme</button>
+        </nav>
+    </div>
+
+    <!-- Back to top button -->
+    <button id="backToTop" class="hidden fixed bottom-6 right-6 bg-amber-600 hover:bg-amber-700 text-white px-3 py-2 rounded-full shadow-lg z-50" title="Back to top">
+        <i class="fas fa-arrow-up"></i>
+    </button>
 
     <main class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
         
@@ -228,18 +293,24 @@
             </div>
         </div>
         
-            <div class="mb-10">
-            <h1 class="responsive-h1 font-bold text-stone-900 mb-4">Mastering the AWS Command Line</h1>
-            <p class="text-lg text-stone-600 leading-relaxed text-justify">
+            <div class="mb-6">
+            <h1 class="responsive-h1 font-bold text-stone-900 mb-3">Mastering the AWS Command Line</h1>
+            <p class="text-lg text-stone-600 leading-relaxed sm:text-justify text-left">
                 Welcome to the expanded interactive companion for the AWS CloudShell Command Reference. This application has been enriched with an extensive selection of critical commands across modern AWS cloud architectures—spanning Compute, Storage, Security, Orchestration, Database, Serverless, and container environments. Use the unified search and difficulty filters to explore real-world production snippets.
             </p>
+            <div class="mt-4">
+                <button id="exploreCTA" onclick="scrollToSection('commandsGrid', event)" class="inline-flex items-center gap-2 bg-amber-600 hover:bg-amber-700 text-white px-4 py-2 rounded-lg shadow-sm">
+                    <i class="fas fa-rocket"></i>
+                    Explore Commands
+                </button>
+            </div>
         </div>
 
         <!-- AWS Information Section -->
         <div class="mb-12 space-y-6">
-            <div class="bg-gradient-to-r from-amber-50 to-orange-50 rounded-2xl border border-amber-200 p-8">
-                <h2 class="text-2xl font-bold text-stone-900 mb-4">What is AWS?</h2>
-                <p class="text-stone-700 leading-relaxed text-justify">
+            <div id="whatIsAws" class="bg-gradient-to-r from-amber-50 to-orange-50 rounded-2xl border border-amber-200 p-8">
+                <h2 class="text-2xl sm:text-3xl font-bold text-stone-900 mb-4">What is AWS?</h2>
+                <p class="text-stone-700 leading-relaxed sm:text-justify text-left">
                     Amazon Web Services (AWS) is a comprehensive, evolving cloud computing platform provided by Amazon. It offers over 200+ fully featured services including compute, storage, databases, machine learning, analytics, networking, security, and more. AWS enables businesses to build scalable, reliable, and cost-effective applications without the overhead of managing physical infrastructure. With data centers distributed globally across multiple regions, AWS provides low-latency access and high availability for applications serving customers worldwide.
                 </p>
             </div>
@@ -387,22 +458,21 @@
         <!-- About the Publisher Section -->
         <div class="mt-20 pt-12 border-t border-stone-200">
             <div id="publisher" class="mb-8 text-center">
-                <h2 class="text-2xl sm:text-3xl lg:text-4xl font-bold text-stone-900 mb-2">About the Publisher</h2>
-                    <p class="text-stone-600 text-lg">Meet the mind behind CloudShell Explorer</p>
+                <h2 class="text-xl sm:text-2xl lg:text-4xl font-bold text-stone-900 mb-2">About the Publisher</h2>
                 </div>
 
             <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
                 <!-- Main Profile Card -->
                 <div class="lg:col-span-2">
-                    <div class="bg-gradient-to-br from-amber-50 via-orange-50 to-amber-100 rounded-3xl border border-amber-300 p-10 shadow-lg">
-                        <div class="flex items-start gap-6 mb-8">
-                            <div class="w-24 h-24 bg-gradient-to-br from-amber-500 to-orange-600 rounded-2xl flex items-center justify-center text-white text-4xl font-bold shadow-lg">
+                    <div class="bg-gradient-to-br from-amber-50 via-orange-50 to-amber-100 rounded-3xl border border-amber-300 p-6 sm:p-10 shadow-lg publisher-card">
+                        <div class="flex flex-col sm:flex-row items-start gap-6 mb-8">
+                            <div class="w-20 h-20 sm:w-24 sm:h-24 bg-gradient-to-br from-amber-500 to-orange-600 rounded-2xl flex items-center justify-center text-white text-3xl sm:text-4xl font-bold shadow-lg mx-auto sm:mx-0">
                                 VK
                             </div>
-                            <div class="flex-1">
-                                <h3 class="text-3xl font-bold text-stone-900 mb-1">Vinay Kumar Duvva</h3>
-                                <p class="text-lg font-semibold text-amber-800 mb-3">☁️ Cloud & Infrastructure Engineer</p>
-                                <div class="flex flex-wrap gap-2">
+                            <div class="flex-1 text-center sm:text-left">
+                                <h3 class="text-2xl sm:text-3xl font-bold text-stone-900 mb-1">Vinay Kumar Duvva</h3>
+                                <p class="text-base sm:text-lg font-semibold text-amber-800 mb-3">☁️ Cloud & Infrastructure Engineer</p>
+                                <div class="flex flex-wrap gap-2 justify-center sm:justify-start">
                                     <span class="bg-blue-200 text-blue-900 px-3 py-1 rounded-full text-sm font-medium">AWS</span>
                                     <span class="bg-red-200 text-red-900 px-3 py-1 rounded-full text-sm font-medium">GCP</span>
                                     <span class="bg-purple-200 text-purple-900 px-3 py-1 rounded-full text-sm font-medium">Azure</span>
@@ -411,33 +481,33 @@
                             </div>
                         </div>
 
-                        <div class="space-y-6">
-                            <div class="bg-white bg-opacity-70 rounded-2xl p-6 border border-amber-200">
-                                <h4 class="text-lg font-bold text-stone-900 mb-3 flex items-center gap-2">
-                                    <span class="text-2xl">💼</span>
+                            <div class="space-y-6">
+                            <div class="bg-white bg-opacity-70 rounded-2xl p-4 sm:p-6 border border-amber-200">
+                                <h4 class="text-base sm:text-lg font-bold text-stone-900 mb-3 flex items-center gap-2">
+                                    <span class="text-xl">💼</span>
                                     Professional Background
                                 </h4>
-                                <p class="text-stone-700 leading-relaxed text-justify">
+                                <p class="text-stone-700 leading-relaxed text-justify text-sm sm:text-base">
                                     Based in Hyderabad, with two years at Cognizant as Senior Process Executive in Digital Content Services. Specialized in high-volume data curation and extraction for Google operations, maintaining 99.9% quality standards while managing tight turnaround requirements. Built strong discipline in ownership, troubleshooting under pressure, and customer-centric problem-solving.
                                 </p>
                             </div>
 
-                            <div class="bg-white bg-opacity-70 rounded-2xl p-6 border border-amber-200">
-                                <h4 class="text-lg font-bold text-stone-900 mb-3 flex items-center gap-2">
-                                    <span class="text-2xl">🏗️</span>
+                            <div class="bg-white bg-opacity-70 rounded-2xl p-4 sm:p-6 border border-amber-200">
+                                <h4 class="text-base sm:text-lg font-bold text-stone-900 mb-3 flex items-center gap-2">
+                                    <span class="text-xl">🏗️</span>
                                     Cloud & Infrastructure Expertise
                                 </h4>
-                                <p class="text-stone-700 leading-relaxed text-justify">
+                                <p class="text-stone-700 leading-relaxed text-justify text-sm sm:text-base">
                                     Hands-on experience across AWS, GCP, and Azure covering EC2, S3, VPCs, Kubernetes clusters, Terraform automation, monitoring, and network configuration. Certified AWS Solutions Architect Associate, Google Professional Cloud Architect, and Azure Network Engineer Associate.
                                 </p>
                             </div>
 
-                            <div class="bg-white bg-opacity-70 rounded-2xl p-6 border border-amber-200">
-                                <h4 class="text-lg font-bold text-stone-900 mb-3 flex items-center gap-2">
-                                    <span class="text-2xl">🚀</span>
+                            <div class="bg-white bg-opacity-70 rounded-2xl p-4 sm:p-6 border border-amber-200">
+                                <h4 class="text-base sm:text-lg font-bold text-stone-900 mb-3 flex items-center gap-2">
+                                    <span class="text-xl">🚀</span>
                                     Career Vision
                                 </h4>
-                                <p class="text-stone-700 leading-relaxed text-justify">
+                                <p class="text-stone-700 leading-relaxed text-justify text-sm sm:text-base">
                                     Transitioning fully into cloud infrastructure roles. Driven by technical problem-solving, customer impact, and continuous learning. Production-focused, quality-driven background provides a strong foundation for growth in cloud engineering.
                                 </p>
                             </div>
@@ -1275,14 +1345,105 @@
             try { history.replaceState(null, '', '#' + id); } catch (err) { /* ignore */ }
         }
 
+        // Mobile menu toggle with focus trap and ARIA management
+        let __focusTrapHandler = null;
+        function trapFocus(container) {
+            releaseFocus();
+            if (!container) return;
+            const focusableSelector = 'a[href], button:not([disabled]), textarea, input, select, [tabindex]:not([tabindex="-1"])';
+            const nodes = Array.from(container.querySelectorAll(focusableSelector)).filter(n => n.offsetParent !== null);
+            if (!nodes.length) return;
+            __focusTrapHandler = function(e) {
+                if (e.key !== 'Tab') return;
+                const first = nodes[0];
+                const last = nodes[nodes.length - 1];
+                if (e.shiftKey) {
+                    if (document.activeElement === first) { e.preventDefault(); last.focus(); }
+                } else {
+                    if (document.activeElement === last) { e.preventDefault(); first.focus(); }
+                }
+            };
+            document.addEventListener('keydown', __focusTrapHandler);
+        }
+
+        function releaseFocus() {
+            if (__focusTrapHandler) {
+                document.removeEventListener('keydown', __focusTrapHandler);
+                __focusTrapHandler = null;
+            }
+        }
+
+        function toggleMobileMenu(force) {
+            const menu = document.getElementById('mobileMenu');
+            const backdrop = document.getElementById('mobileBackdrop');
+            if (!menu) return;
+            const isOpen = menu.classList.contains('menu-open');
+            const show = typeof force === 'boolean' ? force : !isOpen;
+            if (show) {
+                // open: reveal and slide-in
+                menu.classList.remove('hidden');
+                if (backdrop) { backdrop.classList.remove('hidden'); requestAnimationFrame(() => backdrop.classList.add('show')); }
+                // allow next frame for CSS to apply
+                requestAnimationFrame(() => menu.classList.add('menu-open'));
+                // accessibility
+                menu.setAttribute('aria-hidden', 'false');
+                if (backdrop) backdrop.setAttribute('aria-hidden', 'false');
+                document.body.style.overflow = 'hidden';
+                // focus trap + focus first interactive element inside menu for accessibility
+                setTimeout(() => {
+                    const first = menu.querySelector('a,button'); if (first) first.focus();
+                    trapFocus(menu);
+                }, 120);
+            } else {
+                // close: slide out then hide
+                menu.classList.remove('menu-open');
+                if (backdrop) { backdrop.classList.remove('show'); backdrop.setAttribute('aria-hidden','true'); }
+                releaseFocus();
+                setTimeout(() => {
+                    menu.classList.add('hidden');
+                    menu.setAttribute('aria-hidden', 'true');
+                    if (backdrop) backdrop.classList.add('hidden');
+                    document.body.style.overflow = '';
+                    // return focus to menu button
+                    const btn = document.getElementById('mobileMenuBtn'); if (btn) btn.focus();
+                }, 340);
+            }
+        }
+
         // Copy to Clipboard Functions
+        function copyTextToClipboard(text) {
+            if (navigator.clipboard && navigator.clipboard.writeText) {
+                return navigator.clipboard.writeText(text);
+            }
+            return new Promise((resolve, reject) => {
+                try {
+                    const ta = document.createElement('textarea');
+                    ta.value = text;
+                    ta.style.position = 'fixed';
+                    ta.style.left = '-9999px';
+                    document.body.appendChild(ta);
+                    ta.focus();
+                    ta.select();
+                    const ok = document.execCommand('copy');
+                    document.body.removeChild(ta);
+                    if (ok) resolve(); else reject(new Error('execCommand failed'));
+                } catch (err) {
+                    reject(err);
+                }
+            });
+        }
+
         function copyCommand(command, event) {
-            event.stopPropagation();
-            navigator.clipboard.writeText(command).then(() => {
+            if (event && event.stopPropagation) event.stopPropagation();
+            const targetEl = (event && (event.currentTarget || (event.target && event.target.closest && event.target.closest('button')))) || null;
+            copyTextToClipboard(command).then(() => {
                 addToHistory(command);
+                showInlineTooltip(targetEl, 'Copied');
                 showNotification('Command copied to clipboard!');
             }).catch(() => {
-                alert('Failed to copy command');
+                // Best-effort fallback: prompt the user to long-press to copy
+                if (targetEl) showInlineTooltip(targetEl, 'Tap & hold to copy');
+                showNotification('Tap and hold to copy the command');
             });
         }
 
@@ -1292,6 +1453,44 @@
             notification.textContent = message;
             document.body.appendChild(notification);
             setTimeout(() => notification.remove(), 3000);
+        }
+
+        // Inline tooltip near a target element (used for copy feedback)
+        function showInlineTooltip(targetEl, message) {
+            if (!targetEl) { showNotification(message); return; }
+            const tip = document.createElement('div');
+            tip.className = 'inline-tooltip';
+            tip.textContent = message;
+            // adapt colors to dark mode
+            if (document.body.classList.contains('dark-mode')) {
+                tip.style.background = '#f3f4f6';
+                tip.style.color = '#0f172a';
+            } else {
+                tip.style.background = 'rgba(17,24,39,0.95)';
+                tip.style.color = '#fff';
+            }
+            document.body.appendChild(tip);
+            // Position after rendering
+            const targetRect = targetEl.getBoundingClientRect();
+            const tipRect = tip.getBoundingClientRect();
+            const topPos = window.scrollY + targetRect.top - tipRect.height - 8;
+            const leftPos = window.scrollX + targetRect.left + (targetRect.width - tipRect.width) / 2;
+            tip.style.top = topPos + 'px';
+            tip.style.left = leftPos + 'px';
+            requestAnimationFrame(() => tip.classList.add('show'));
+            setTimeout(() => { tip.classList.remove('show'); setTimeout(() => tip.remove(), 220); }, 1600);
+        }
+
+        // Back to top button behavior
+        function setupBackToTop() {
+            const btn = document.getElementById('backToTop');
+            if (!btn) return;
+            function update() {
+                if (window.scrollY > 300) { btn.classList.remove('hidden'); } else { btn.classList.add('hidden'); }
+            }
+            window.addEventListener('scroll', update);
+            btn.addEventListener('click', (e) => { e.preventDefault(); scrollToTop(); });
+            update();
         }
 
         // History Functions
@@ -1327,8 +1526,7 @@
         }
 
         function copyHistoryCommand(command) {
-            navigator.clipboard.writeText(command);
-            showNotification('Command copied to clipboard!');
+            copyTextToClipboard(command).then(() => showNotification('Command copied to clipboard!')).catch(() => showNotification('Tap and hold to copy the command'));
         }
 
         // Bookmark Functions
@@ -1413,6 +1611,23 @@
                 displayBookmarks();
                 document.getElementById('bookmarksModal').classList.remove('hidden');
             });
+            // Mobile menu handlers
+            const mobileBtn = document.getElementById('mobileMenuBtn');
+            const mobileClose = document.getElementById('mobileMenuClose');
+            if (mobileBtn) mobileBtn.addEventListener('click', () => toggleMobileMenu(true));
+            if (mobileClose) mobileClose.addEventListener('click', () => toggleMobileMenu(false));
+            const backdrop = document.getElementById('mobileBackdrop');
+            if (backdrop) backdrop.addEventListener('click', () => toggleMobileMenu(false));
+            // close on Escape
+            document.addEventListener('keydown', (e) => { if (e.key === 'Escape') toggleMobileMenu(false); });
+
+            // Explore CTA
+            const exploreCTA = document.getElementById('exploreCTA');
+            if (exploreCTA) exploreCTA.addEventListener('click', (e) => scrollToSection('commandsGrid', e));
+            const navExplore = document.getElementById('navExploreBtn');
+            if (navExplore) navExplore.addEventListener('click', (e) => scrollToSection('commandsGrid', e));
+            // initialize back-to-top
+            setupBackToTop();
         }
 
         window.onload = () => {
