@@ -22,6 +22,16 @@
 
 ---
 
+## 🛠️ Recent Changes (June 2026)
+
+- Improved dark-mode contrast across the UI; targeted fixes applied to the **Service Distribution** and **My AWS Cloud Projects** cards so headings, gradients, and inner panels are readable in dark mode.
+- Implemented copy-to-clipboard for commands, command history persistence, and bookmarking (localStorage-backed).
+- Chart.js doughnut chart now updates dynamically with active filters and adapts legend/tooltips to dark mode.
+- Replaced emoji-only indicators with professional Font Awesome icons and refined typography (Inter + JetBrains Mono).
+- Several layout and accessibility tweaks for better readability on small screens.
+
+---
+
 ## 🌟 Website Purpose
 
 CloudShell Explorer transforms the overwhelming complexity of AWS CLI documentation into an intuitive, interactive learning experience:
@@ -49,6 +59,12 @@ CloudShell Explorer transforms the overwhelming complexity of AWS CLI documentat
   - Service distribution across the reference guide
   - Real-time updates based on active filters
   - Quick overview of covered AWS services
+
+✅ **Dark Mode & Theming** - High-contrast dark theme with targeted fixes for headings, gradients, and the Projects/Service Distribution cards
+
+✅ **Copy-to-Clipboard, History & Bookmarks** - Copy commands with one click; commands are stored in local history and can be bookmarked for quick access
+
+✅ **Professional Icons & Fonts** - Font Awesome icons and developer-friendly fonts (Inter, JetBrains Mono) for readable, production-quality UI
 
 ✅ **Responsive Design** - Optimized for:
   - Desktop browsers for detailed exploration
@@ -342,9 +358,12 @@ AWS_CloudShell_Commands/
 
 Planned features for CloudShell Explorer:
 
-- [ ] Command history and bookmarking
-- [ ] Dark mode theme
-- [ ] Copy-to-clipboard functionality for commands
+
+Implemented / Near-term roadmap:
+
+- [x] Command history and bookmarking (localStorage-backed)
+- [x] Dark mode theme with contrast fixes for key sections
+- [x] Copy-to-clipboard functionality for commands
 - [ ] Command execution simulator
 - [ ] Additional service categories (SageMaker, QuickSight, etc.)
 - [ ] Video tutorials for complex commands

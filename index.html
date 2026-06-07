@@ -37,6 +37,9 @@
         body.dark-mode .text-stone-900 { color: #e5e5e5 !important; }
         body.dark-mode .text-stone-800 { color: #d0d0d0 !important; }
         body.dark-mode .text-stone-700 { color: #b0b0b0 !important; }
+        /* Improve paragraph contrast in dark mode */
+        body.dark-mode .text-stone-700 { color: #d1d5db !important; }
+        body.dark-mode .text-stone-600 { color: #c7ccd1 !important; }
         body.dark-mode .text-stone-600 { color: #909090 !important; }
         body.dark-mode .text-stone-500 { color: #707070 !important; }
         body.dark-mode .border-stone-200 { border-color: #404040 !important; }
@@ -59,6 +62,54 @@
         body.dark-mode .bg-stone-900 { background-color: #1a1a1a !important; }
         body.dark-mode .bg-gradient-to-r { background-color: #2d2d2d !important; }
         body.dark-mode .bg-gradient-to-br { background-color: #2d2d2d !important; }
+        /* Specific AWS info gradient block readability */
+        body.dark-mode .from-amber-50.to-orange-50 {
+            background: linear-gradient(90deg, #2b2b2b 0%, #262525 100%) !important;
+        }
+        body.dark-mode .from-amber-50.to-orange-50 h2,
+        body.dark-mode .from-amber-50.to-orange-50 p {
+            color: #f3efe6 !important;
+        }
+        /* Targeted fixes for Service Distribution card */
+        body.dark-mode .service-card {
+            background-color: #111217 !important;
+            border-color: #2f3740 !important;
+            box-shadow: none !important;
+        }
+        body.dark-mode .service-card h2 {
+            color: #e6eef8 !important;
+        }
+        body.dark-mode .service-card p { color: #c9d2db !important; }
+
+        /* Targeted fixes for My AWS Cloud Projects */
+        body.dark-mode .projects-card {
+            background: linear-gradient(90deg,#0b1220 0%, #071022 100%) !important;
+            border-color: #163047 !important;
+        }
+        body.dark-mode .projects-card h2,
+        body.dark-mode .projects-card h3,
+        body.dark-mode .projects-card p,
+        body.dark-mode .projects-card .text-xs {
+            color: #cfe8ff !important;
+        }
+        body.dark-mode .projects-card .bg-white {
+            background-color: #071224 !important;
+            border-color: #133042 !important;
+        }
+        body.dark-mode .projects-card a.inline-block {
+            background-color: #0369a1 !important;
+            color: #ffffff !important;
+        }
+        /* Additional color overrides for improved contrast */
+        body.dark-mode a { color: #7dd3fc !important; }
+        body.dark-mode a:hover { color: #38bdf8 !important; }
+        body.dark-mode .text-blue-900 { color: #cfe8ff !important; }
+        body.dark-mode .text-blue-800 { color: #9ec9ff !important; }
+        body.dark-mode .text-blue-700 { color: #86c1ff !important; }
+        body.dark-mode .text-amber-600 { color: #fbbf24 !important; }
+        body.dark-mode .text-amber-800 { color: #d4b896 !important; }
+        body.dark-mode .text-stone-400 { color: #9a9a9a !important; }
+        body.dark-mode .font-mono { color: #e6e6e6 !important; }
 
         /* Copy notification */
         .copy-notification {
@@ -234,7 +285,7 @@
         <div class="grid grid-cols-1 lg:grid-cols-12 gap-8">
             
             <div class="lg:col-span-4 space-y-6">
-                <div class="bg-white rounded-2xl shadow-sm border border-stone-200 p-6">
+                <div class="bg-white rounded-2xl shadow-sm border border-stone-200 p-6 service-card">
                     <h2 class="text-lg font-bold text-stone-900 border-b border-stone-100 pb-3 mb-4">Service Distribution</h2>
                     <p class="text-sm text-stone-500 mb-6">
                         An live overview of the AWS service boundaries represented in this guide. The dynamic chart updates automatically based on your active filters and search queries.
@@ -249,6 +300,35 @@
                     <p class="text-sm text-amber-800 leading-relaxed">
                         AWS CloudShell environments automatically preserve up to 1 GB of data in your home directory (<code>$HOME</code>) across multiple sessions within the same AWS Region. This includes your custom utility tools, configurations, and active terminal shell history.
                     </p>
+                </div>
+
+                <div class="bg-gradient-to-br from-blue-50 to-cyan-50 rounded-2xl border border-blue-200 p-6 projects-card">
+                    <h2 class="text-lg font-bold text-blue-900 mb-4 flex items-center gap-2">
+                        <i class="fas fa-project-diagram"></i> My AWS Cloud Projects
+                    </h2>
+                    <div class="space-y-4">
+                        <div>
+                            <h3 class="font-semibold text-blue-900 mb-2">Hands-on AWS Portfolio</h3>
+                            <p class="text-sm text-blue-800 leading-relaxed">
+                                14 projects from IAM to ECS Fargate, built on Free Tier. Comprehensive roadmap for aspiring Solutions Architects with Console + CLI + CloudFormation approaches.
+                            </p>
+                        </div>
+                        <div class="bg-white rounded-lg p-3 border border-blue-100">
+                            <p class="text-xs font-semibold text-blue-900 mb-2">📊 Project Coverage:</p>
+                            <ul class="text-xs text-blue-800 space-y-1">
+                                <li>✅ <strong>4 Completed:</strong> IAM, S3, Static Website, EC2</li>
+                                <li>⏳ <strong>10 Upcoming:</strong> VPC, RDS, CloudWatch, Serverless, CI/CD, Auto Scaling, IaC, Event-Driven, ECS, Capstone</li>
+                            </ul>
+                        </div>
+                        <div class="flex flex-wrap gap-2">
+                            <a href="https://github.com/vinay1515/Vinay_kumar_AWS_Beginner_level_projects" target="_blank" class="inline-block text-xs bg-blue-600 hover:bg-blue-700 text-white px-3 py-1.5 rounded transition-colors">
+                                <i class="fab fa-github mr-1"></i>View Projects
+                            </a>
+                            <a href="https://d2qfvpm2acd8sv.cloudfront.net/" target="_blank" class="inline-block text-xs bg-cyan-600 hover:bg-cyan-700 text-white px-3 py-1.5 rounded transition-colors">
+                                <i class="fas fa-globe mr-1"></i>Live Demo
+                            </a>
+                        </div>
+                    </div>
                 </div>
             </div>
 
@@ -903,6 +983,11 @@
                 '#ef4444'
             ];
 
+            const isDark = document.body.classList.contains('dark-mode');
+            const legendColor = isDark ? '#e5e5e5' : '#57534e';
+            const tooltipTitleColor = isDark ? '#ffffff' : '#ffffff';
+            const tooltipBodyColor = isDark ? '#e5e5e5' : '#e5e5e5';
+
             myChart = new Chart(ctx, {
                 type: 'doughnut',
                 data: {
@@ -923,12 +1008,14 @@
                             position: 'right',
                             labels: {
                                 font: { family: "'Inter', sans-serif", size: 10 },
-                                color: '#57534e',
+                                color: legendColor,
                                 padding: 8
                             }
                         },
                         tooltip: {
-                            backgroundColor: 'rgba(28, 25, 23, 0.9)',
+                            backgroundColor: isDark ? 'rgba(28,25,23,0.9)' : 'rgba(255,255,255,0.95)',
+                            titleColor: tooltipTitleColor,
+                            bodyColor: tooltipBodyColor,
                             titleFont: { family: "'Inter', sans-serif", size: 12 },
                             bodyFont: { family: "'Inter', sans-serif", size: 12 },
                             padding: 10,
@@ -1129,6 +1216,25 @@
             } else {
                 icon.classList.remove('fa-sun');
                 icon.classList.add('fa-moon');
+            }
+            // Update chart colors when theme changes
+            try {
+                if (typeof myChart !== 'undefined' && myChart) {
+                    const legendColor = isDarkMode ? '#e5e5e5' : '#57534e';
+                    const tooltipBg = isDarkMode ? 'rgba(28,25,23,0.9)' : 'rgba(255,255,255,0.95)';
+                    const tooltipBody = isDarkMode ? '#e5e5e5' : '#262626';
+                    if (myChart.options && myChart.options.plugins && myChart.options.plugins.legend) {
+                        myChart.options.plugins.legend.labels.color = legendColor;
+                    }
+                    if (myChart.options && myChart.options.plugins && myChart.options.plugins.tooltip) {
+                        myChart.options.plugins.tooltip.backgroundColor = tooltipBg;
+                        myChart.options.plugins.tooltip.bodyColor = tooltipBody;
+                        myChart.options.plugins.tooltip.titleColor = tooltipBody;
+                    }
+                    myChart.update();
+                }
+            } catch (e) {
+                console.warn('Failed to update chart theme', e);
             }
         }
 
