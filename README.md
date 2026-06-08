@@ -24,11 +24,14 @@
 
 ## 🛠️ Recent Changes (June 2026)
 
-- Improved dark-mode contrast across the UI; targeted fixes applied to the **Service Distribution** and **My AWS Cloud Projects** cards so headings, gradients, and inner panels are readable in dark mode.
-- Implemented copy-to-clipboard for commands, command history persistence, and bookmarking (localStorage-backed).
-- Chart.js doughnut chart now updates dynamically with active filters and adapts legend/tooltips to dark mode.
-- Replaced emoji-only indicators with professional Font Awesome icons and refined typography (Inter + JetBrains Mono).
-- Several layout and accessibility tweaks for better readability on small screens.
+- **Expanded Content**: Added comprehensive "What is AWS?", "Why Learn AWS?", and "Common Uses of AWS" sections to provide educational context for beginners and practitioners.
+- **Publisher Profile**: Integrated detailed "About the Publisher" section showcasing Vinay Kumar Duvva's cloud engineering expertise, certifications (AWS Solutions Architect, Google Cloud Architect, Azure Network Engineer), and hands-on project portfolio.
+- **Project Showcase**: Featured "My AWS Cloud Projects" with 14 real-world projects (4 completed, 10 upcoming) spanning IAM, S3, EC2, VPC, RDS, CloudWatch, Serverless, CI/CD, and more.
+- **Dark Mode Enhancement**: Improved dark-mode contrast across the UI with targeted fixes for **Service Distribution** and **My AWS Cloud Projects** cards.
+- **Feature Completeness**: Implemented copy-to-clipboard for commands, command history persistence, and bookmarking (localStorage-backed).
+- **Dynamic Visualization**: Chart.js doughnut chart now updates dynamically with active filters and adapts legend/tooltips to dark mode.
+- **Professional UI**: Replaced emoji-only indicators with Font Awesome icons and refined typography (Inter + JetBrains Mono).
+- **Mobile Optimization**: Enhanced accessibility and responsiveness for small screens with improved tap targets and responsive font scaling.
 
 ---
 
@@ -72,8 +75,113 @@ CloudShell Explorer transforms the overwhelming complexity of AWS CLI documentat
   - Mobile devices for quick command lookup
 
 ---
+## ☁️ What is AWS?
 
-## 📚 Commands Coverage
+Amazon Web Services (AWS) is a comprehensive, evolving cloud computing platform provided by Amazon. It offers over 200+ fully featured services including compute, storage, databases, machine learning, analytics, networking, security, and more. AWS enables businesses to build scalable, reliable, and cost-effective applications without the overhead of managing physical infrastructure. With data centers distributed globally across multiple regions, AWS provides low-latency access and high availability for applications serving customers worldwide.
+
+---
+
+## 🎓 Why Learn AWS?
+
+### Industry Demand
+AWS is the market leader with approximately **32% cloud market share**. Most enterprises use AWS for critical infrastructure, making AWS expertise highly valuable in today's job market.
+
+### Career Growth
+AWS skills command premium salaries and create abundant job opportunities across industries and geographies. Cloud engineering roles are among the highest-paid in the tech industry.
+
+### Comprehensive Ecosystem
+AWS covers every aspect of cloud computing, enabling you to build complete solutions from infrastructure to AI/ML. Whether you're building microservices, data lakes, or machine learning models, AWS has the tools.
+
+### Cost Optimization
+Understanding AWS allows organizations to reduce infrastructure costs by **30-50%** through intelligent resource allocation, reserved instances, and spot pricing strategies.
+
+### Security & Compliance
+AWS provides enterprise-grade security controls meeting international compliance standards including ISO 27001, HIPAA, SOC 2, and PCI-DSS, giving peace of mind for mission-critical applications.
+
+---
+
+## 🛠️ Common AWS Use Cases
+
+### Web Applications
+Host scalable, highly available web applications with auto-scaling and load balancing. Applications can handle millions of requests with minimal operational overhead.
+
+### Big Data & Analytics
+Process massive datasets using services like EMR, Redshift, and Athena for business intelligence. Transform raw data into actionable insights at scale.
+
+### Machine Learning
+Build, train, and deploy ML models using SageMaker, enabling predictive analytics and AI applications without deep infrastructure expertise.
+
+### Backup & Disaster Recovery
+Implement robust backup strategies and disaster recovery solutions with S3, Glacier, and AWS Backup to protect critical business data.
+
+### IoT Solutions
+Connect, manage, and analyze millions of IoT devices using AWS IoT services for real-time monitoring and insights.
+
+### Microservices Architecture
+Build containerized architectures using ECS, EKS, and Lambda for modular, scalable applications that are easy to maintain and deploy.
+
+---
+## � About the Creator
+
+**Vinay Kumar Duvva** | ☁️ Cloud & Infrastructure Engineer
+
+### Professional Background
+Based in Hyderabad with two years at Cognizant as Senior Process Executive in Digital Content Services. Specialized in high-volume data curation and extraction for Google operations, maintaining 99.9% quality standards while managing tight turnaround requirements. Built strong discipline in ownership, troubleshooting under pressure, and customer-centric problem-solving.
+
+### Cloud & Infrastructure Expertise
+Hands-on experience across **AWS**, **GCP**, and **Azure** covering:
+- Compute: EC2, ECS, EKS, Lambda
+- Storage: S3, Glacier, EBS
+- Networking: VPCs, Route53, CloudFront
+- Databases: RDS, DynamoDB, Aurora
+- Infrastructure: Terraform, CloudFormation, Kubernetes
+- Monitoring: CloudWatch, Prometheus, ELK Stack
+
+**Certifications:**
+- 🏆 AWS Solutions Architect Associate
+- 🏆 Google Professional Cloud Architect
+- 🏆 Azure Network Engineer Associate
+
+### Career Vision
+Transitioning fully into cloud infrastructure roles. Driven by technical problem-solving, customer impact, and continuous learning. Production-focused, quality-driven background provides a strong foundation for growth in cloud engineering.
+
+### Connect & Portfolio
+- **LinkedIn**: [linkedin.com/in/vinay-kumar-duvva](https://www.linkedin.com/in/vinay-kumar-duvva/)
+- **GitHub**: [github.com/vinay1515](https://github.com/vinay1515)
+- **Portfolio**: [AWS Portfolio Projects](https://vinay-kumar-duvva-portfoilo.s3.ap-south-1.amazonaws.com/My+Portfoilo+Website/index.html)
+- **Email**: duvvavinaykumar@gmail.com
+
+---
+
+## 🚀 My AWS Cloud Projects
+
+A comprehensive hands-on portfolio featuring **14 AWS projects** built on the Free Tier, designed as a roadmap for aspiring Solutions Architects.
+
+### Project Coverage
+
+**✅ Completed Projects (4):**
+1. IAM - Identity & Access Management
+2. S3 - Simple Storage Service
+3. Static Website Hosting
+4. EC2 - Elastic Compute Cloud
+
+**⏳ Upcoming Projects (10):**
+5. VPC - Virtual Private Cloud
+6. RDS - Relational Database Service
+7. CloudWatch - Monitoring & Logging
+8. Serverless Architecture
+9. CI/CD Pipelines
+10. Auto Scaling & Load Balancing
+11. Infrastructure as Code (Terraform)
+12. Event-Driven Architecture
+13. ECS - Elastic Container Service
+14. Capstone Project - Full Stack Application
+
+**Resources:**
+- **Repository**: [GitHub - AWS Beginner Level Projects](https://github.com/vinay1515/Vinay_kumar_AWS_Beginner_level_projects)
+- **Live Demo**: [AWS Projects Showcase](https://d2qfvpm2acd8sv.cloudfront.net/)
+
+---
 
 ### Service Categories Included
 
