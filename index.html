@@ -193,7 +193,7 @@
     <!-- Visualization & Content Choices: 1. Donut Chart (Chart.js) -> Goal: Inform/Overview -> Justification: Quickly visualizes the distribution of commands across AWS services, helping users understand the reference guide's focus areas at a glance. 2. Filterable Accordion Cards -> Goal: Explore/Organize -> Justification: Prevents cognitive overload associated with dense terminal syntax by allowing users to scan high-level actions and expand only the specific commands they are troubleshooting or learning. NO SVG/Mermaid used. -->
     <!-- CONFIRMATION: NO SVG graphics used. NO Mermaid JS used. -->
 
-    <nav class="bg-white border-b border-stone-200 sticky top-0 z-50">
+    <nav class="bg-white border-b border-stone-200 sticky top-0 z-50" aria-label="Main navigation">
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
             <div class="flex flex-wrap justify-between items-center sm:h-16 py-2">
                 <a href="#top" onclick="scrollToTop(event)" class="flex items-center gap-2 cursor-pointer" aria-label="Home - CloudShell Explorer">
@@ -207,28 +207,28 @@
                         Interactive Reference Guide v2
                     </div>
                     <!-- Mobile hamburger (shown on all sizes) -->
-                    <button id="mobileMenuBtn" class="p-2 text-stone-600 hover:text-amber-600 transition-colors" title="Open menu">
+                    <button type="button" id="mobileMenuBtn" class="p-2 text-stone-600 hover:text-amber-600 transition-colors" aria-label="Open menu" title="Open menu">
                         <i class="fas fa-bars text-lg"></i>
                     </button>
                     <div id="navControls" class="flex gap-2 hidden">
-                        <button id="navExploreBtn" class="hidden sm:inline-flex items-center gap-2 bg-amber-600 hover:bg-amber-700 text-white px-3 py-2 rounded-md text-sm" title="Explore Commands">
+                        <button type="button" id="navExploreBtn" class="hidden sm:inline-flex items-center gap-2 bg-amber-600 hover:bg-amber-700 text-white px-3 py-2 rounded-md text-sm" aria-label="Explore Commands" title="Explore Commands">
                             <i class="fas fa-rocket"></i>
                             <span>Explore</span>
                         </button>
                         <!-- Publisher quick-link -->
-                        <button id="publisherBtn" class="px-3 py-2 text-stone-600 hover:text-amber-600 transition-colors" title="About the Publisher" onclick="scrollToSection('publisher', event)">
+                        <button type="button" id="publisherBtn" class="px-3 py-2 text-stone-600 hover:text-amber-600 transition-colors" aria-label="About the Publisher" title="About the Publisher" onclick="scrollToSection('publisher', event)">
                             <i class="fas fa-user text-lg"></i>
                         </button>
                         <!-- History Button -->
-                        <button id="historyBtn" class="px-3 py-2 text-stone-600 hover:text-amber-600 transition-colors" title="View command history">
+                        <button type="button" id="historyBtn" class="px-3 py-2 text-stone-600 hover:text-amber-600 transition-colors" aria-label="View command history" title="View command history">
                             <i class="fas fa-history text-lg"></i>
                         </button>
                         <!-- Bookmarks Button -->
-                        <button id="bookmarksBtn" class="px-3 py-2 text-stone-600 hover:text-amber-600 transition-colors" title="View bookmarked commands">
+                        <button type="button" id="bookmarksBtn" class="px-3 py-2 text-stone-600 hover:text-amber-600 transition-colors" aria-label="View bookmarked commands" title="View bookmarked commands">
                             <i class="fas fa-bookmark text-lg"></i>
                         </button>
                         <!-- Dark Mode Toggle (hidden in inline nav) -->
-                        <button id="darkModeToggle" class="px-3 py-2 text-stone-600 hover:text-amber-600 transition-colors" title="Toggle dark mode">
+                        <button type="button" id="darkModeToggle" class="px-3 py-2 text-stone-600 hover:text-amber-600 transition-colors" aria-label="Toggle dark mode" title="Toggle dark mode">
                             <i class="fas fa-moon text-lg"></i>
                         </button>
                     </div>
@@ -238,41 +238,41 @@
     </nav>
 
     <!-- Mobile Menu Backdrop -->
-    <div id="mobileBackdrop" class="hidden fixed inset-0 z-40 bg-black bg-opacity-40 transition-opacity" aria-hidden="true"></div>
+    <div id="mobileBackdrop" class="hidden fixed inset-0 z-40 bg-black bg-opacity-40 transition-opacity"></div>
 
     <!-- Mobile Menu Overlay -->
-    <div id="mobileMenu" class="hidden fixed inset-y-0 left-0 z-50 w-4/5 max-w-sm bg-white p-6 overflow-auto" aria-hidden="true" role="dialog" aria-modal="true" aria-label="Main menu">
+    <div id="mobileMenu" class="hidden fixed inset-y-0 left-0 z-50 w-4/5 max-w-sm bg-white p-6 overflow-auto" role="dialog" aria-modal="true" aria-label="Main menu">
         <div class="flex justify-between items-center mb-6">
             <div class="flex items-center gap-2">
                 <div class="w-8 h-8 bg-amber-500 rounded flex items-center justify-center text-white font-bold text-xl">_</div>
                 <span class="font-bold text-lg">CloudShellExplorer</span>
             </div>
-            <button id="mobileMenuClose" class="p-2 text-stone-600"><i class="fas fa-times text-lg"></i></button>
+            <button type="button" id="mobileMenuClose" class="p-2 text-stone-600" aria-label="Close menu"><i class="fas fa-times text-lg"></i></button>
         </div>
-        <nav class="space-y-4">
+        <nav class="space-y-4" aria-label="Mobile navigation">
             <a href="#top" onclick="toggleMobileMenu(false);scrollToTop(event)" class="block text-lg font-medium text-stone-800">Home</a>
             <a href="#commandsGrid" onclick="toggleMobileMenu(false);scrollToSection('commandsGrid', event)" class="block text-lg font-medium text-stone-800">Explore Commands</a>
             <a href="#whatIsAws" onclick="toggleMobileMenu(false);scrollToSection('whatIsAws', event)" class="block text-lg font-medium text-stone-800">What is AWS?</a>
             <a href="#publisher" onclick="toggleMobileMenu(false);scrollToSection('publisher', event)" class="block text-lg font-medium text-stone-800">About Publisher</a>
-            <button onclick="toggleMobileMenu(false);displayHistory();document.getElementById('historyModal').classList.remove('hidden')" class="w-full text-left block text-lg font-medium text-stone-800">History</button>
-            <button onclick="toggleMobileMenu(false);displayBookmarks();document.getElementById('bookmarksModal').classList.remove('hidden')" class="w-full text-left block text-lg font-medium text-stone-800">Bookmarks</button>
-            <button onclick="toggleMobileMenu(false);toggleDarkMode()" class="w-full text-left block text-lg font-medium text-stone-800">Toggle Theme</button>
+            <button type="button" onclick="toggleMobileMenu(false);displayHistory();document.getElementById('historyModal').classList.remove('hidden')" class="w-full text-left block text-lg font-medium text-stone-800">History</button>
+            <button type="button" onclick="toggleMobileMenu(false);displayBookmarks();document.getElementById('bookmarksModal').classList.remove('hidden')" class="w-full text-left block text-lg font-medium text-stone-800">Bookmarks</button>
+            <button type="button" onclick="toggleMobileMenu(false);toggleDarkMode()" class="w-full text-left block text-lg font-medium text-stone-800">Toggle Theme</button>
         </nav>
     </div>
 
     <!-- Back to top button -->
-    <button id="backToTop" class="hidden fixed bottom-6 right-6 bg-amber-600 hover:bg-amber-700 text-white px-3 py-2 rounded-full shadow-lg z-50" title="Back to top">
+    <button type="button" id="backToTop" class="hidden fixed bottom-6 right-6 bg-amber-600 hover:bg-amber-700 text-white px-3 py-2 rounded-full shadow-lg z-50" aria-label="Back to top" title="Back to top">
         <i class="fas fa-arrow-up"></i>
     </button>
 
     <main class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
-        
+
         <!-- History Modal -->
         <div id="historyModal" class="hidden fixed inset-0 bg-black bg-opacity-50 z-50 flex items-center justify-center p-4">
             <div class="bg-white dark:bg-stone-900 rounded-2xl max-w-2xl w-full max-h-96 overflow-auto">
                 <div class="sticky top-0 bg-white dark:bg-stone-900 border-b border-stone-200 dark:border-stone-700 p-6 flex justify-between items-center">
                     <h2 class="text-2xl font-bold text-stone-900 dark:text-white"><i class="fas fa-history mr-2"></i>Command History</h2>
-                    <button onclick="document.getElementById('historyModal').classList.add('hidden')" class="text-stone-600 dark:text-stone-400 hover:text-stone-900"><i class="fas fa-times text-lg"></i></button>
+                    <button type="button" onclick="document.getElementById('historyModal').classList.add('hidden')" class="text-stone-600 dark:text-stone-400 hover:text-stone-900" aria-label="Close history modal"><i class="fas fa-times text-lg"></i></button>
                 </div>
                 <div id="historyList" class="p-6 space-y-2">
                     <p class="text-stone-600 dark:text-stone-400">No history yet. Run commands to build your history!</p>
@@ -285,21 +285,21 @@
             <div class="bg-white dark:bg-stone-900 rounded-2xl max-w-2xl w-full max-h-96 overflow-auto">
                 <div class="sticky top-0 bg-white dark:bg-stone-900 border-b border-stone-200 dark:border-stone-700 p-6 flex justify-between items-center">
                     <h2 class="text-2xl font-bold text-stone-900 dark:text-white"><i class="fas fa-star mr-2"></i>Bookmarked Commands</h2>
-                    <button onclick="document.getElementById('bookmarksModal').classList.add('hidden')" class="text-stone-600 dark:text-stone-400 hover:text-stone-900"><i class="fas fa-times text-lg"></i></button>
+                    <button type="button" onclick="document.getElementById('bookmarksModal').classList.add('hidden')" class="text-stone-600 dark:text-stone-400 hover:text-stone-900" aria-label="Close bookmarks modal"><i class="fas fa-times text-lg"></i></button>
                 </div>
                 <div id="bookmarksList" class="p-6 space-y-2">
                     <p class="text-stone-600 dark:text-stone-400">No bookmarks yet. Click ⭐ on any command to bookmark it!</p>
                 </div>
             </div>
         </div>
-        
+
             <div class="mb-6">
             <h1 class="responsive-h1 font-bold text-stone-900 mb-3">Mastering the AWS Command Line</h1>
             <p class="text-lg text-stone-600 leading-relaxed sm:text-justify text-left">
                 Welcome to the expanded interactive companion for the AWS CloudShell Command Reference. This application has been enriched with an extensive selection of critical commands across modern AWS cloud architectures—spanning Compute, Storage, Security, Orchestration, Database, Serverless, and container environments. Use the unified search and difficulty filters to explore real-world production snippets.
             </p>
             <div class="mt-4">
-                <button id="exploreCTA" onclick="scrollToSection('commandsGrid', event)" class="inline-flex items-center gap-2 bg-amber-600 hover:bg-amber-700 text-white px-4 py-2 rounded-lg shadow-sm">
+                <button type="button" id="exploreCTA" onclick="scrollToSection('commandsGrid', event)" class="inline-flex items-center gap-2 bg-amber-600 hover:bg-amber-700 text-white px-4 py-2 rounded-lg shadow-sm">
                     <i class="fas fa-rocket"></i>
                     Explore Commands
                 </button>
@@ -337,7 +337,7 @@
                         </li>
                         <li class="flex gap-3">
                             <span class="text-amber-600 font-bold mt-1">✓</span>
-                            <span><b>Security & Compliance:</b> AWS provides enterprise-grade security controls meeting international compliance standards (ISO, HIPAA, SOC 2, PCI-DSS).</span>
+                            <span><b>Security &amp; Compliance:</b> AWS provides enterprise-grade security controls meeting international compliance standards (ISO, HIPAA, SOC 2, PCI-DSS).</span>
                         </li>
                     </ul>
                 </div>
@@ -351,7 +351,7 @@
                         </li>
                         <li class="flex gap-3">
                             <span class="text-amber-600 font-bold">◆</span>
-                            <span><b>Big Data & Analytics:</b> Process massive datasets using services like EMR, Redshift, and Athena for business intelligence.</span>
+                            <span><b>Big Data &amp; Analytics:</b> Process massive datasets using services like EMR, Redshift, and Athena for business intelligence.</span>
                         </li>
                         <li class="flex gap-3">
                             <span class="text-amber-600 font-bold">◆</span>
@@ -359,7 +359,7 @@
                         </li>
                         <li class="flex gap-3">
                             <span class="text-amber-600 font-bold">◆</span>
-                            <span><b>Backup & Disaster Recovery:</b> Implement robust backup strategies and disaster recovery solutions with S3, Glacier, and AWS Backup.</span>
+                            <span><b>Backup &amp; Disaster Recovery:</b> Implement robust backup strategies and disaster recovery solutions with S3, Glacier, and AWS Backup.</span>
                         </li>
                         <li class="flex gap-3">
                             <span class="text-amber-600 font-bold">◆</span>
@@ -375,7 +375,7 @@
         </div>
 
         <div class="grid grid-cols-1 lg:grid-cols-12 gap-8">
-            
+
             <div class="lg:col-span-4 space-y-6">
                 <div class="bg-white rounded-2xl shadow-sm border border-stone-200 p-6 service-card">
                     <h2 class="text-lg font-bold text-stone-900 border-b border-stone-100 pb-3 mb-4">Service Distribution</h2>
@@ -425,21 +425,21 @@
             </div>
 
             <div class="lg:col-span-8 flex flex-col space-y-6">
-                
+
                 <div class="bg-white rounded-2xl shadow-sm border border-stone-200 p-4 md:p-6">
                     <h2 class="text-lg font-bold text-stone-900 mb-4">Explore Commands</h2>
                     <p class="text-sm text-stone-500 mb-4">
                         Filter the command repository by difficulty level or search for specific tools, services, or keywords to instantly find the operational snippet you require.
                     </p>
-                    
+
                     <div class="flex flex-col md:flex-row gap-4 justify-between items-center">
                         <div class="flex bg-stone-100 p-1 rounded-lg w-full md:w-auto overflow-x-auto hide-scrollbar" id="filter-container">
-                            <button class="filter-btn active px-4 py-2 text-sm font-medium rounded-md transition-colors bg-white shadow-sm text-stone-900" data-filter="All">All</button>
-                            <button class="filter-btn px-4 py-2 text-sm font-medium rounded-md transition-colors text-stone-500 hover:text-stone-900 hover:bg-stone-200" data-filter="Beginner">Beginner</button>
-                            <button class="filter-btn px-4 py-2 text-sm font-medium rounded-md transition-colors text-stone-500 hover:text-stone-900 hover:bg-stone-200" data-filter="Intermediate">Intermediate</button>
-                            <button class="filter-btn px-4 py-2 text-sm font-medium rounded-md transition-colors text-stone-500 hover:text-stone-900 hover:bg-stone-200" data-filter="Advanced">Advanced</button>
+                            <button type="button" class="filter-btn active px-4 py-2 text-sm font-medium rounded-md transition-colors bg-white shadow-sm text-stone-900" data-filter="All">All</button>
+                            <button type="button" class="filter-btn px-4 py-2 text-sm font-medium rounded-md transition-colors text-stone-500 hover:text-stone-900 hover:bg-stone-200" data-filter="Beginner">Beginner</button>
+                            <button type="button" class="filter-btn px-4 py-2 text-sm font-medium rounded-md transition-colors text-stone-500 hover:text-stone-900 hover:bg-stone-200" data-filter="Intermediate">Intermediate</button>
+                            <button type="button" class="filter-btn px-4 py-2 text-sm font-medium rounded-md transition-colors text-stone-500 hover:text-stone-900 hover:bg-stone-200" data-filter="Advanced">Advanced</button>
                         </div>
-                        
+
                         <div class="relative w-full md:w-64">
                             <input type="text" id="searchInput" placeholder="Search commands..." class="w-full pl-10 pr-4 py-2 border border-stone-200 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-amber-500 focus:border-amber-500 transition-all bg-stone-50 focus:bg-white">
                             <div class="absolute left-3 top-2.5 text-stone-400">
@@ -471,7 +471,7 @@
                             </div>
                             <div class="flex-1 text-center sm:text-left">
                                 <h3 class="text-2xl sm:text-3xl font-bold text-stone-900 mb-1">Vinay Kumar Duvva</h3>
-                                <p class="text-base sm:text-lg font-semibold text-amber-800 mb-3">☁️ Cloud & Infrastructure Engineer</p>
+                                <p class="text-base sm:text-lg font-semibold text-amber-800 mb-3">☁️ Cloud &amp; Infrastructure Engineer</p>
                                 <div class="flex flex-wrap gap-2 justify-center sm:justify-start">
                                     <span class="bg-blue-200 text-blue-900 px-3 py-1 rounded-full text-sm font-medium">AWS</span>
                                     <span class="bg-red-200 text-red-900 px-3 py-1 rounded-full text-sm font-medium">GCP</span>
@@ -495,7 +495,7 @@
                             <div class="bg-white bg-opacity-70 rounded-2xl p-4 sm:p-6 border border-amber-200">
                                 <h4 class="text-base sm:text-lg font-bold text-stone-900 mb-3 flex items-center gap-2">
                                     <span class="text-xl">🏗️</span>
-                                    Cloud & Infrastructure Expertise
+                                    Cloud &amp; Infrastructure Expertise
                                 </h4>
                                 <p class="text-stone-700 leading-relaxed text-justify text-sm sm:text-base">
                                     Hands-on experience across AWS, GCP, and Azure covering EC2, S3, VPCs, Kubernetes clusters, Terraform automation, monitoring, and network configuration. Certified AWS Solutions Architect Associate, Google Professional Cloud Architect, and Azure Network Engineer Associate.
@@ -569,7 +569,7 @@
                     <div class="bg-gradient-to-br from-amber-50 to-orange-50 rounded-2xl border border-amber-200 p-6">
                         <h4 class="text-lg font-bold text-stone-900 mb-4 flex items-center gap-2">
                             <span class="text-2xl">📍</span>
-                            Location & Focus
+                            Location &amp; Focus
                         </h4>
                         <p class="text-stone-700 font-semibold mb-3">Hyderabad, India</p>
                         <div class="flex flex-wrap gap-2">
